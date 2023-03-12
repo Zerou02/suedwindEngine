@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "outDir": "./resources/js",
+    "removeComments": true,
+    "target": "ES2021",
+    "moduleResolution": "node",
+    "alwaysStrict": false,
+    "allowUnreachableCode": false,
+    "noImplicitAny": false,
+    "strictNullChecks": true,
+    "noImplicitReturns": false,
+    "noUncheckedIndexedAccess": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false
+  },
+  "include": ["./src/*"]
+}
