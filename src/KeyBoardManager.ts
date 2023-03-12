@@ -40,7 +40,7 @@ export class KeyboardManager {
 
   addFunction = (
     key: string,
-    functi: CallableFunction,
+    functi: (e: KeyboardEvent) => void,
     singleExecution: boolean = true
   ) => {
     this.keys[key] = { pressed: false, fn: functi, singleExecution };

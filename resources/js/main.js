@@ -1,4 +1,4 @@
-import { gAssetPath, gKeyBoardManager } from "./globals.js";
+import { gAssetPath, gKeyBoardManager, gLayerManager, } from "./globals.js";
 import { Sprite } from "./Sprite.js";
 const initialize = () => {
     let body = document.getElementById("body");
@@ -14,6 +14,7 @@ const initialize = () => {
     let ctx2 = canvas2.getContext("2d");
     ctx2.fillStyle = "red";
     ctx?.fillRect(0, 0, 800, 600);
+    gLayerManager.layers.push(canvas);
     let sprite = new Sprite(gAssetPath + "icons/appIcon.png", ctx);
     gKeyBoardManager.addFunction("w", (e) => sprite.move({ x: 0, y: -10 }));
     gKeyBoardManager.addFunction("a", (e) => sprite.move({ x: -10, y: 0 }));

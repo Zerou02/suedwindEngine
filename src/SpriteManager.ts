@@ -17,13 +17,6 @@ export class SpriteManager {
       this._addToMap(x);
       x.spriteManager = this;
     });
-
-    setInterval(() => {
-      Object.values(this.orderedSprites).forEach((x) =>
-        x.forEach((y) => y.draw())
-      ),
-        1000 / 30;
-    });
   }
 
   _findLayerExtrema = () => {
