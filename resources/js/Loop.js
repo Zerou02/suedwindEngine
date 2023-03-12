@@ -1,5 +1,12 @@
 import { draw } from "./Graphics.js";
 const FPSTARGET = 30;
+let pressedKeys = {};
+window.addEventListener("keydown", (event) => {
+    pressedKeys[event.key] = true;
+});
+window.addEventListener("keyup", (event) => {
+    delete pressedKeys[event.key];
+});
 let end = false;
 let lastTime = 0;
 const Loop = (time) => {
@@ -12,4 +19,4 @@ const Loop = (time) => {
 const update = () => {
     draw();
 };
-export { Loop };
+export { Loop, pressedKeys };

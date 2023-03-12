@@ -1,4 +1,5 @@
 import { body } from "./index.js";
+import { pressedKeys } from "./Loop.js";
 import pos, { Position } from "./Position.js";
 
 const createElement = (
@@ -56,22 +57,6 @@ const w = {
     ],
   } as { [keys: number]: WorldObjects[] },
 };
-window.addEventListener("keypress", (event) => {
-  switch (event.key) {
-    case "w":
-      w.origin = pos.add(w.origin, pos.new(0, -1));
-      break;
-    case "s":
-      w.origin = pos.add(w.origin, pos.new(0, 1));
-      break;
-    case "a":
-      w.origin = pos.add(w.origin, pos.new(-1, 0));
-      break;
-    case "d":
-      w.origin = pos.add(w.origin, pos.new(1, 0));
-      break;
-  }
-});
 
 const getViewPos = (x: number, y: number) => {
   return pos.new(
@@ -126,6 +111,10 @@ const initGraphic = (
 };
 
 const draw = () => {
+  if ("w" in pressedKeys) w.origin = pos.add(w.origin, pos.new(0, -1));
+  if ("s" in pressedKeys) w.origin = pos.add(w.origin, pos.new(0, 1));
+  if ("a" in pressedKeys) w.origin = pos.add(w.origin, pos.new(-1, 0));
+  if ("d" in pressedKeys) w.origin = pos.add(w.origin, pos.new(1, 0));
   context.clearRect(0, 0, window.innerWidth, window.innerHeight);
   context.fillStyle = "red";
   let origin = pos.new(

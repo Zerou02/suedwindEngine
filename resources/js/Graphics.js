@@ -1,4 +1,5 @@
 import { body } from "./index.js";
+import { pressedKeys } from "./Loop.js";
 import pos from "./Position.js";
 const createElement = (id = "", tag = "div", ...classes) => {
     const el = document.createElement(tag);
@@ -37,22 +38,6 @@ const w = {
         ],
     },
 };
-window.addEventListener("keypress", (event) => {
-    switch (event.key) {
-        case "w":
-            w.origin = pos.add(w.origin, pos.new(0, -1));
-            break;
-        case "s":
-            w.origin = pos.add(w.origin, pos.new(0, 1));
-            break;
-        case "a":
-            w.origin = pos.add(w.origin, pos.new(-1, 0));
-            break;
-        case "d":
-            w.origin = pos.add(w.origin, pos.new(1, 0));
-            break;
-    }
-});
 const getViewPos = (x, y) => {
     return pos.new(...Object.values(pos.scale(1 / g.scale, pos.add(pos.new(x, y), pos.scale(-1, g.origin)))).filter((_, i) => i < 2));
 };
@@ -86,6 +71,14 @@ const initGraphic = (viewOrigin = pos.new(100, 15), viewEnd = pos.new(-100, -15)
     w.origin = pos.new(g.origin.x + g.viewWidth / 2, g.origin.y + g.viewHeight / 2);
 };
 const draw = () => {
+    if ("w" in pressedKeys)
+        w.origin = pos.add(w.origin, pos.new(0, -1));
+    if ("s" in pressedKeys)
+        w.origin = pos.add(w.origin, pos.new(0, 1));
+    if ("a" in pressedKeys)
+        w.origin = pos.add(w.origin, pos.new(-1, 0));
+    if ("d" in pressedKeys)
+        w.origin = pos.add(w.origin, pos.new(1, 0));
     context.clearRect(0, 0, window.innerWidth, window.innerHeight);
     context.fillStyle = "red";
     let origin = pos.new(w.origin.x >= g.origin.x ? w.origin.x : g.origin.x, w.origin.y >= g.origin.y ? w.origin.y : g.origin.y);

@@ -2,6 +2,16 @@ import { draw } from "./Graphics.js";
 
 const FPSTARGET = 30;
 
+let pressedKeys: { [keys: string]: boolean } = {};
+
+window.addEventListener("keydown", (event) => {
+  pressedKeys[event.key] = true;
+});
+
+window.addEventListener("keyup", (event) => {
+  delete pressedKeys[event.key];
+});
+
 let end = false;
 let lastTime = 0;
 const Loop = (time: number) => {
@@ -14,4 +24,4 @@ const update = () => {
   draw();
 };
 
-export { Loop };
+export { Loop, pressedKeys };
