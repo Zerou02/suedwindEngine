@@ -20,7 +20,9 @@ export class KeyboardManager {
           "  n Event:",
           e,
           "time: ",
-          new Date().getMilliseconds()
+          new Date().getMilliseconds(),
+          "keys:",
+          this.keys
         );
       }
       if (!this.keys[e.key]) return;
@@ -41,7 +43,7 @@ export class KeyboardManager {
   addFunction = (
     key: string,
     functi: (e: KeyboardEvent) => void,
-    singleExecution: boolean = true
+    singleExecution: boolean = false
   ) => {
     this.keys[key] = { pressed: false, fn: functi, singleExecution };
   };

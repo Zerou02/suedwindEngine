@@ -2,12 +2,12 @@ export class KeyboardManager {
     constructor() {
         this.keys = {};
         this.debug = false;
-        this.addFunction = (key, functi, singleExecution = true) => {
+        this.addFunction = (key, functi, singleExecution = false) => {
             this.keys[key] = { pressed: false, fn: functi, singleExecution };
         };
         window.addEventListener("keydown", (e) => {
             if (this.debug) {
-                console.log("Key: ", e.key, "  n Event:", e, "time: ", new Date().getMilliseconds());
+                console.log("Key: ", e.key, "  n Event:", e, "time: ", new Date().getMilliseconds(), "keys:", this.keys);
             }
             if (!this.keys[e.key])
                 return;

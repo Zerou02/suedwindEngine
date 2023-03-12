@@ -5,5 +5,5 @@ import { SpriteManager } from "./SpriteManager.js";
 export const gAssetPath = "./assets/";
 export const gSpriteManager = new SpriteManager();
 export const gKeyBoardManager = new KeyboardManager();
-export const gLayerManager = new LayerManager([]);
+export const gLayerManager = new LayerManager();
 export const gDrawManager = new DrawManager(gSpriteManager, gLayerManager);

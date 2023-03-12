@@ -3,12 +3,12 @@ export class DrawManager {
         this.spriteManager = spriteManager;
         this.layerManager = layerManager;
         setInterval(() => {
-            layerManager.layers.forEach((x) => {
-                let ctx = x.getContext("2d");
-                ctx.clearRect(0, 0, x.width, x.height);
+            layerManager.orderedLayers.forEach((x) => {
+                let ctx = x.canvas.getContext("2d");
+                ctx.clearRect(0, 0, x.canvas.width, x.canvas.height);
             });
-            Object.values(this.spriteManager.orderedSprites).forEach((x) => x.forEach((y) => y.draw())),
-                1000 / 30;
+            Object.values(this.spriteManager.orderedSprites).forEach((x) => x.forEach((y) => y.draw()));
+            1000 / 30;
         });
     }
 }
