@@ -1,8 +1,15 @@
-body {
-  padding: 0%;
-  margin: 0%;
+* {
+  margin: 0px;
+  padding: 0px;
+  overflow: hidden;
 }
 
-canvas {
+body {
+  --borderThickness: 2px;
+}
+
+.menu {
+  background-color: transparent;
+  border: var(--borderThickness) solid black;
   position: absolute;
 }
