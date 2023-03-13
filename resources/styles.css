@@ -8,7 +8,7 @@ body {
   --borderThickness: 2px;
 }
 
-.menu {
+.menuBar {
   background-color: transparent;
   border: var(--borderThickness) solid black;
   position: absolute;

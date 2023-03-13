@@ -1,20 +1,6 @@
 import { body } from "./index.js";
 import { pressedKeys } from "./Loop.js";
 import pos from "./Position.js";
-const createElement = (id = "", tag = "div", ...classes) => {
-    const el = document.createElement(tag);
-    el.id = id;
-    el.classList.add(...classes);
-    return el;
-};
-const sizeElement = (el, width, height) => {
-    el.style.width = `${width}px`;
-    el.style.height = `${height}px`;
-};
-const positionElement = (el, left, top) => {
-    el.style.left = `${left}px`;
-    el.style.top = `${top}px`;
-};
 const c = document.createElement("canvas");
 const context = c.getContext("2d");
 const g = {
@@ -101,4 +87,4 @@ const draw = () => {
         }
     }));
 };
-export { initGraphic, createElement, sizeElement, positionElement, draw, getWorldPos, };
+export { initGraphic, draw, getWorldPos, };
