@@ -1,8 +1,7 @@
 import { drawImage } from "./canvasUtils.js";
-import { gSpriteManager } from "./globals.js";
 import { assignID } from "./utils.js";
 export class Sprite {
-    constructor(src, layer, position = { x: 0, y: 0 }, size = { x: 0, y: 0 }) {
+    constructor(src, layer, position, size, scene) {
         this.move = (vector) => {
             this.transform.dimensions.x += vector.x;
             this.transform.dimensions.y += vector.y;
@@ -31,19 +30,20 @@ export class Sprite {
         this.imgElement = new Image();
         this.imgElement.src = src;
         this.ctx = layer.canvas.getContext("2d");
+        this.scene = scene;
+        this.transform = {
+            dimensions: {
+                x: position.x,
+                y: position.y,
+                h: size.y,
+                w: size.x,
+                rotationDegrees: 0,
+            },
+            layer: 0,
+        };
         drawImage(this.ctx, src, position, (img) => {
             this.imgElement = img;
-            this.transform = {
-                dimensions: {
-                    x: position.x,
-                    y: position.y,
-                    h: size.y || this.imgElement.naturalHeight,
-                    w: size.x || this.imgElement.naturalWidth,
-                    rotationDegrees: 0,
-                },
-                layer: 0,
-            };
-            gSpriteManager.addSprite(this);
+            this.scene.spriteManager.addSprite(this);
         });
         this.id = assignID();
     }

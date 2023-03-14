@@ -1,9 +1,7 @@
-import {
-  gAssetPath,
-  gKeyBoardManager,
-  gLayerManager,
-  gSpriteManager,
-} from "./globals.js";
+import { DrawManager } from "./DrawManager.js";
+import { gAssetPath, gKeyBoardManager } from "./globals.js";
+import { Player } from "./Player.js";
+import { Scene } from "./Scene.js";
 import { Sprite } from "./Sprite.js";
 
 const createCanvas = (width: number, height: number) => {
@@ -11,7 +9,6 @@ const createCanvas = (width: number, height: number) => {
   canvas.style.position = "absolute";
   canvas.width = width;
   canvas.height = height;
-  console.log({ canvas });
   return canvas;
 };
 
@@ -22,26 +19,43 @@ const initialize = () => {
   body.append(top);
   body.append(canvas);
 
-  gLayerManager.addLayer("veryTop", createCanvas(800, 600), 2);
-  gLayerManager.addLayer("top", top, 1);
-  gLayerManager.addLayer("ground", canvas, 0);
+  const baseScene = new Scene();
+  const gDrawManager = new DrawManager(baseScene);
 
-  let topLayer = gLayerManager.layers["top"];
-  let groundLayer = gLayerManager.layers["ground"];
-  let veryTopLayer = gLayerManager.layers["veryTop"];
+  baseScene.layerManager.addLayer("veryTop", createCanvas(800, 600), 2, false);
+  baseScene.layerManager.addLayer("top", top, 1, true);
+  baseScene.layerManager.addLayer("ground", canvas, 0, true);
+
+  let topLayer = baseScene.layerManager.layers["top"];
+  let groundLayer = baseScene.layerManager.layers["ground"];
+  let veryTopLayer = baseScene.layerManager.layers["veryTop"];
+
   body.append(veryTopLayer.canvas);
-  let enemy = new Sprite(
+  let enemySprie = new Sprite(
     gAssetPath + "sprites/spaceship.png",
     topLayer,
     { x: 0, y: 0 },
-    { x: 400, y: 300 }
+    { x: 400, y: 300 },
+    baseScene
   );
-  let sprite = new Sprite(gAssetPath + "icons/appIcon.png", groundLayer);
+  let sprite = new Sprite(
+    gAssetPath + "icons/appIcon.png",
+    groundLayer,
+    {
+      x: 0,
+      y: 400,
+    },
+    { x: 100, y: 100 },
+    baseScene
+  );
 
-  gKeyBoardManager.addFunction("w", (e) => sprite.move({ x: 0, y: -10 }));
-  gKeyBoardManager.addFunction("a", (e) => sprite.move({ x: -10, y: 0 }));
-  gKeyBoardManager.addFunction("s", (e) => sprite.move({ x: 0, y: 10 }));
-  gKeyBoardManager.addFunction("d", (e) => sprite.move({ x: 10, y: 0 }));
+  let player = new Player(sprite);
+  let enemy = new Player(enemySprie);
+
+  gKeyBoardManager.addFunction("w", (e) => player.move({ x: 0, y: -10 }));
+  gKeyBoardManager.addFunction("a", (e) => player.move({ x: -10, y: 0 }));
+  gKeyBoardManager.addFunction("s", (e) => player.move({ x: 0, y: 10 }));
+  gKeyBoardManager.addFunction("d", (e) => player.move({ x: 10, y: 0 }));
   gKeyBoardManager.addFunction("+", (e) =>
     sprite.increaseSize({ x: 10, y: 10 })
   );
@@ -49,5 +63,10 @@ const initialize = () => {
     sprite.increaseSize({ x: -10, y: -10 })
   );
   gKeyBoardManager.addFunction("f", (e) => sprite.setLayer(veryTopLayer), true);
+  document.addEventListener("mousedown", (e: MouseEvent) =>
+    console.log("mousPos", e.clientX, e.clientY)
+  );
+
+  console.log(baseScene.layerManager);
 };
 initialize();

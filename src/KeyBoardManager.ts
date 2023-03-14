@@ -1,13 +1,16 @@
+interface KeyMapVal {
+  pressed: boolean;
+  fn: CallableFunction;
+  singleExecution: boolean;
+}
+
 interface KeyMap {
-  [key: string]: {
-    pressed: boolean;
-    fn: CallableFunction;
-    singleExecution: boolean;
-  };
+  [key: string]: KeyMapVal;
 }
 
 export class KeyboardManager {
   keys: KeyMap = {};
+  _keysArrayMapped: KeyMapVal[] = [];
   pressedKeys: {};
   debug: boolean = false;
 
@@ -32,12 +35,15 @@ export class KeyboardManager {
     window.addEventListener("keyup", (e) => {
       this.keys[e.key].pressed = false;
     });
-    setInterval(() => {
-      Object.values(this.keys).forEach((x) => {
-        if (x.pressed) x.fn();
-        if (x.singleExecution) x.pressed = false;
-      });
-    }, 1000 / 30);
+
+    setInterval(() => this.keyBoardEval(), 1000 / 30);
+  }
+
+  keyBoardEval() {
+    this._keysArrayMapped.forEach((x) => {
+      if (x.pressed) x.fn();
+      if (x.singleExecution) x.pressed = false;
+    });
   }
 
   addFunction = (
@@ -46,5 +52,6 @@ export class KeyboardManager {
     singleExecution: boolean = false
   ) => {
     this.keys[key] = { pressed: false, fn: functi, singleExecution };
+    this._keysArrayMapped = Object.values(this.keys);
   };
 }

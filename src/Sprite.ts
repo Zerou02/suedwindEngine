@@ -1,6 +1,6 @@
 import { drawImage } from "./canvasUtils.js";
-import { gSpriteManager } from "./globals.js";
 import { Layer } from "./LayerManager.js";
+import { Scene } from "./Scene.js";
 import { SpriteManager } from "./SpriteManager.js";
 import { Coordinate2d, Transform } from "./types.js";
 import { assignID } from "./utils.js";
@@ -13,32 +13,35 @@ export class Sprite {
   imgElement: HTMLImageElement;
   layer: Layer;
   ctx: CanvasRenderingContext2D;
-  spriteManager: SpriteManager;
+  scene: Scene;
 
   constructor(
     src: string,
     layer: Layer,
-    position: Coordinate2d = { x: 0, y: 0 },
-    size: Coordinate2d = { x: 0, y: 0 }
+    position: Coordinate2d,
+    size: Coordinate2d,
+    scene: Scene
   ) {
     this.src = src;
     this.layer = layer;
     this.imgElement = new Image();
     this.imgElement.src = src;
     this.ctx = layer.canvas.getContext("2d") as CanvasRenderingContext2D;
+    this.scene = scene;
+    this.transform = {
+      dimensions: {
+        x: position.x,
+        y: position.y,
+        h: size.y,
+        w: size.x,
+        rotationDegrees: 0,
+      },
+      layer: 0,
+    };
+
     drawImage(this.ctx, src, position, (img) => {
       this.imgElement = img;
-      this.transform = {
-        dimensions: {
-          x: position.x,
-          y: position.y,
-          h: size.y || this.imgElement.naturalHeight,
-          w: size.x || this.imgElement.naturalWidth,
-          rotationDegrees: 0,
-        },
-        layer: 0,
-      };
-      gSpriteManager.addSprite(this);
+      this.scene.spriteManager.addSprite(this);
     });
     this.id = assignID();
   }
@@ -66,6 +69,7 @@ export class Sprite {
     this.layer = layer;
     this.ctx = layer.canvas.getContext("2d") as CanvasRenderingContext2D;
   };
+
   // TODO: Rotation zeichnen
   draw = () => {
     const d = this.transform.dimensions;
