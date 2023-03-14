@@ -19,12 +19,14 @@ const Controller = {
         window.removeEventListener("mousemove", handleMouseMoveNearBorder);
         window.removeEventListener("mousedown", startResize);
         window.removeEventListener("mouseup", resetResizeState);
+        window.removeEventListener("dblclick", minMaxOnDoubleClickNearBorder);
     },
     start: () => {
         window.addEventListener("resize", sizeMenuBars);
         window.addEventListener("mousemove", handleMouseMoveNearBorder);
         window.addEventListener("mousedown", startResize);
         window.addEventListener("mouseup", resetResizeState);
+        window.addEventListener("dblclick", minMaxOnDoubleClickNearBorder);
     },
     close: () => {
         Controller.pause();
@@ -34,6 +36,12 @@ const Controller = {
         rightMenu.remove();
         bottomMenu.remove();
     },
+};
+const idToDimensionKey = {
+    left: "leftWidth",
+    right: "rightWidth",
+    top: "topHeight",
+    bottom: "bottomHeight",
 };
 const topMenu = createElement("top", "div", "menuBar");
 const leftMenu = createElement("left", "div", "menuBar");
@@ -65,35 +73,65 @@ const sizeMenuBars = () => {
         2 * Controller.borderThickness);
     resizeCallback(pos.new(leftMenu.getBoundingClientRect().width, topMenu.getBoundingClientRect().height), pos.new(-rightMenu.getBoundingClientRect().width, -bottomMenu.getBoundingClientRect().height));
 };
+const LastDimension = {
+    topHeight: 100,
+    leftWidth: 100,
+    rightWidth: 100,
+    bottomHeight: 100,
+};
+const minMaxOnDoubleClickNearBorder = (event) => {
+    if (!menuResizeTarget)
+        return;
+    const id = menuResizeTarget.id;
+    const border = idToDimensionKey[id];
+    if (Controller.MenuBarDimensions[border] >= Controller.MinDimensions[border]) {
+        LastDimension[border] = Controller.MenuBarDimensions[border];
+        Controller.MenuBarDimensions[border] = 10;
+    }
+    else
+        Controller.MenuBarDimensions[border] = LastDimension[border];
+    sizeMenuBars();
+};
 let menuResizeTarget = null;
 const handleMouseMoveNearBorder = (event) => {
+    if (resetResizeStateFlag) {
+        resizeStart = null;
+        menuResizeTarget = null;
+        resetResizeStateFlag = false;
+    }
     const p = pos.new(event.clientX, event.clientY);
     const left = leftMenu.getBoundingClientRect();
     const top = topMenu.getBoundingClientRect();
     const right = rightMenu.getBoundingClientRect();
     const bottom = bottomMenu.getBoundingClientRect();
-    const leftBorder = Math.abs(p.x - left.width) <= 2;
-    const rightBorder = Math.abs(p.x - right.x) <= 2;
-    const topBorder = Math.abs(p.y - top.height) <= 2;
-    const bottomBorder = Math.abs(p.y - bottom.y) <= 2;
-    if ((leftBorder || rightBorder) && p.y > top.height && p.y < bottom.y) {
+    const leftBorder = Math.abs(p.x - left.width) <= 3;
+    const rightBorder = Math.abs(p.x - right.x) <= 3;
+    const topBorder = Math.abs(p.y - top.height) <= 3;
+    const bottomBorder = Math.abs(p.y - bottom.y) <= 3;
+    if (!menuResizeTarget &&
+        (leftBorder || rightBorder) &&
+        p.y > top.height &&
+        p.y < bottom.y) {
         body.style.cursor = "ew-resize";
         menuResizeTarget = leftBorder ? leftMenu : rightMenu;
     }
-    else if ((topBorder || bottomBorder) && p.x > left.width && p.x < right.x) {
+    else if (!menuResizeTarget &&
+        (topBorder || bottomBorder) &&
+        p.x > left.width &&
+        p.x < right.x) {
         body.style.cursor = "ns-resize";
         menuResizeTarget = topBorder ? topMenu : bottomMenu;
     }
     else {
-        body.style.cursor = "default";
-        if (!resizeStart)
+        if (!resizeStart) {
+            body.style.cursor = "default";
             menuResizeTarget = null;
+        }
     }
     if (!resizeStart || !menuResizeTarget)
         return;
     const id = menuResizeTarget.id;
-    const border = (id +
-        (id === "left" || id === "right" ? "Width" : "Height"));
+    const border = idToDimensionKey[id];
     const shift = (border.includes("left") || border.includes("top") ? -1 : 1) *
         (border.includes("Width")
             ? resizeStart.x - event.clientX
@@ -123,9 +161,9 @@ const startResize = (event) => {
     if (!resizeStart)
         resizeStart = pos.new(event.clientX, event.clientY);
 };
+let resetResizeStateFlag = false;
 const resetResizeState = () => {
-    resizeStart = null;
-    menuResizeTarget = null;
+    resetResizeStateFlag = true;
 };
 const initMenuBars = (onResize, MinDimensions = Controller.MinDimensions) => {
     Controller.MinDimensions = MinDimensions;

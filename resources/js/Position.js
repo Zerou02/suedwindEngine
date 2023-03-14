@@ -6,27 +6,18 @@ const pos = {
         return {
             x,
             y,
-            str: function () {
-                return posToString(this);
-            },
         };
     },
     add: (a, b) => {
         return {
             x: a.x + b.x,
             y: a.y + b.y,
-            str: function () {
-                return posToString(this);
-            },
         };
     },
     scale: (a, b) => {
         return {
             x: a * b.x,
             y: a * b.y,
-            str: function () {
-                return posToString(this);
-            },
         };
     },
     dist: (a, b) => {
@@ -40,3 +31,4 @@ const pos = {
     },
 };
 export default pos;
+export { posToString };

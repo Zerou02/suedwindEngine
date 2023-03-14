@@ -1,7 +1,6 @@
 type Position = {
   x: number;
   y: number;
-  str: (direction?: string | null) => string;
 };
 
 const posToString = (pos: Position): string => {
@@ -13,27 +12,18 @@ const pos = {
     return {
       x,
       y,
-      str: function () {
-        return posToString(this);
-      },
     };
   },
   add: (a: Position, b: Position): Position => {
     return {
       x: a.x + b.x,
       y: a.y + b.y,
-      str: function () {
-        return posToString(this);
-      },
     };
   },
   scale: (a: number, b: Position): Position => {
     return {
       x: a * b.x,
       y: a * b.y,
-      str: function () {
-        return posToString(this);
-      },
     };
   },
   dist: (a: Position, b: Position): number => {
@@ -54,4 +44,4 @@ const pos = {
 };
 
 export default pos;
-export { Position };
+export { Position, posToString };
