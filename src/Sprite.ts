@@ -1,7 +1,6 @@
 import { drawImage } from "./canvasUtils.js";
 import { Layer } from "./LayerManager.js";
 import { Scene } from "./Scene.js";
-import { SpriteManager } from "./SpriteManager.js";
 import { Coordinate2d, Transform } from "./types.js";
 import { assignID } from "./utils.js";
 
