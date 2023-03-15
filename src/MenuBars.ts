@@ -2,8 +2,8 @@ import { createElement, positionElement, sizeElement } from "./DOM.js";
 import { body } from "./index.js";
 import pos, { Position } from "./Position.js";
 
+let borderThickness = 2;
 const Controller = {
-  borderThickness: 2,
   MenuBarDimensions: {
     topHeight: 50,
     leftWidth: 100,
@@ -15,6 +15,10 @@ const Controller = {
     leftWidth: 50,
     rightWidth: 50,
     bottomHeight: 50,
+  },
+  setBorderThickness: (thickness: number) => {
+    borderThickness = thickness;
+    body.style.setProperty("--borderThickness", `${thickness}px`);
   },
   pause: () => {
     window.removeEventListener("mousemove", handleMouseMoveNearBorder);
@@ -70,41 +74,41 @@ const sizeMenuBars = () => {
     Controller.MenuBarDimensions.leftWidth,
     window.innerHeight -
       Controller.MenuBarDimensions.topHeight -
-      3 * Controller.borderThickness
+      3 * borderThickness
   );
   positionElement(
     leftMenu,
     0,
-    Controller.MenuBarDimensions.topHeight + Controller.borderThickness
+    Controller.MenuBarDimensions.topHeight + borderThickness
   );
   sizeElement(
     rightMenu,
     Controller.MenuBarDimensions.rightWidth,
     window.innerHeight -
       Controller.MenuBarDimensions.topHeight -
-      3 * Controller.borderThickness
+      3 * borderThickness
   );
   positionElement(
     rightMenu,
     window.innerWidth -
       Controller.MenuBarDimensions.rightWidth -
-      2 * Controller.borderThickness,
-    Controller.MenuBarDimensions.topHeight + Controller.borderThickness
+      2 * borderThickness,
+    Controller.MenuBarDimensions.topHeight + borderThickness
   );
   sizeElement(
     bottomMenu,
     window.innerWidth -
       Controller.MenuBarDimensions.leftWidth -
       Controller.MenuBarDimensions.rightWidth -
-      4 * Controller.borderThickness,
+      4 * borderThickness,
     Controller.MenuBarDimensions.bottomHeight
   );
   positionElement(
     bottomMenu,
-    Controller.MenuBarDimensions.leftWidth + Controller.borderThickness,
+    Controller.MenuBarDimensions.leftWidth + borderThickness,
     window.innerHeight -
       Controller.MenuBarDimensions.bottomHeight -
-      2 * Controller.borderThickness
+      2 * borderThickness
   );
   resizeCallback(
     pos.new(
@@ -124,7 +128,7 @@ const LastDimension = {
   rightWidth: 100,
   bottomHeight: 100,
 };
-const minMaxOnDoubleClickNearBorder = (event: MouseEvent) => {
+const minMaxOnDoubleClickNearBorder = () => {
   if (!menuResizeTarget) return;
   const id = menuResizeTarget.id as "left" | "right" | "top" | "bottom";
   const border = idToDimensionKey[id] as
@@ -157,19 +161,13 @@ const handleMouseMoveNearBorder = (event: MouseEvent) => {
   const rightBorder = Math.abs(p.x - right.x) <= 3;
   const topBorder = Math.abs(p.y - top.height) <= 3;
   const bottomBorder = Math.abs(p.y - bottom.y) <= 3;
-  if (
-    !menuResizeTarget &&
-    (leftBorder || rightBorder) &&
-    p.y > top.height &&
-    p.y < bottom.y
-  ) {
+  if (!menuResizeTarget && (leftBorder || rightBorder) && p.y > top.height) {
     body.style.cursor = "ew-resize";
     menuResizeTarget = leftBorder ? leftMenu : rightMenu;
   } else if (
     !menuResizeTarget &&
     (topBorder || bottomBorder) &&
-    p.x > left.width &&
-    p.x < right.x
+    (bottomBorder ? p.x > left.width && p.x < right.x : true)
   ) {
     body.style.cursor = "ns-resize";
     menuResizeTarget = topBorder ? topMenu : bottomMenu;
@@ -225,23 +223,32 @@ const resetResizeState = () => {
 
 const initMenuBars = (
   onResize: (origin: Position, end: Position) => void,
-  MinDimensions: {
-    leftWidth: number;
-    rightWidth: number;
-    topHeight: number;
-    bottomHeight: number;
-  } = Controller.MinDimensions
+  options: {
+    MinDimensions?: {
+      leftWidth: number;
+      rightWidth: number;
+      topHeight: number;
+      bottomHeight: number;
+    };
+    borderThickness?: number;
+  } = {
+    MinDimensions: Controller.MinDimensions,
+    borderThickness: borderThickness,
+  }
 ) => {
-  Controller.MinDimensions = MinDimensions;
+  if (options.MinDimensions) Controller.MinDimensions = options.MinDimensions;
   Object.freeze(Controller.MinDimensions);
   Object.freeze(Controller.start);
   Object.freeze(Controller.pause);
   Object.freeze(Controller.close);
+  Object.freeze(Controller.setBorderThickness);
   Object.seal(Controller);
   Object.seal(Controller.MenuBarDimensions);
   Controller.start();
   resizeCallback = onResize;
 
+  if (options.borderThickness)
+    Controller.setBorderThickness(options.borderThickness);
   body.append(topMenu, leftMenu, rightMenu, bottomMenu);
 
   sizeMenuBars();

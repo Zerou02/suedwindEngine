@@ -16,40 +16,27 @@ const g = {
   },
   setOrigin: (x: number, y: number) => (g.origin = pos.new(x, y)),
   setScale: (scale: number) => (g.scale = scale),
-  getScreenCoordinates: (xBoard: number, yBoard: number) =>
-    pos.add(g.origin, pos.scale(g.scale, pos.new(xBoard, yBoard))),
+  getScreenCoordinates: (xView: number, yView: number) =>
+    pos.add(g.origin, pos.scale(g.scale, pos.new(xView, yView))),
+  getWorldPos: (xView: number, yView: number) =>
+    getWorldPos(...pos.spread(g.getScreenCoordinates(xView, yView))),
 };
 
-type WorldObjects = {
-  type: string;
-  origin: Position;
-  width: number;
-  height: number;
-};
-
-const w = {
-  origin: pos.new(0, 0),
-  //Keeps track of all the things in the world, sorted in Layers
-  components: {
-    0: [
-      { type: "rect", origin: pos.new(-100, -100), width: 1000, height: 600 },
-    ],
-  } as { [keys: number]: WorldObjects[] },
-};
-
-const getViewPos = (x: number, y: number) => {
-  return pos.new(
-    ...(Object.values(
-      pos.scale(1 / g.scale, pos.add(pos.new(x, y), pos.scale(-1, g.origin)))
-    ).filter((_, i) => i < 2) as [number, number])
+const getViewPos = (xScreen: number, yScreen: number) => {
+  return pos.scale(
+    1 / g.scale,
+    pos.add(pos.new(xScreen, yScreen), pos.scale(-1, g.origin))
   );
 };
 
-const getWorldPos = (x: number, y: number) => {
-  return pos.add(pos.add(getViewPos(x, y), pos.scale(-1, w.origin)), g.origin);
+const getWorldPos = (xScreen: number, yScreen: number) => {
+  return pos.add(
+    pos.add(getViewPos(xScreen, yScreen), pos.scale(-1, w.origin)),
+    g.origin
+  );
 };
 
-const initGraphic = (
+const setViewDimension = (
   viewOrigin: Position = pos.new(100, 15),
   viewEnd: Position = pos.new(-100, -15),
   scale: number = -1
@@ -83,10 +70,27 @@ const initGraphic = (
   };
   sizeC();
   scaleG();
-  w.origin = pos.new(
-    g.origin.x + g.viewWidth / 2,
-    g.origin.y + g.viewHeight / 2
-  );
+};
+
+type WorldObjects = {
+  type: string;
+  origin: Position;
+  width: number;
+  height: number;
+};
+
+const w = {
+  origin: pos.new(100, 100),
+  //Keeps track of all the things in the world, sorted in Layers
+  components: {
+    0: [
+      { type: "rect", origin: pos.new(-100, -100), width: 1000, height: 600 },
+    ],
+  } as { [keys: number]: WorldObjects[] },
+  getScreenCoordinates: (xWorld: number, yWorld: number) =>
+    pos.add(pos.new(xWorld, yWorld), w.origin),
+  getViewPos: (xWorld: number, yWorld: number) =>
+    getViewPos(...pos.spread(w.getScreenCoordinates(xWorld, yWorld))),
 };
 
 const draw = () => {
@@ -121,8 +125,4 @@ const draw = () => {
   );
 };
 
-export {
-  initGraphic,
-  draw,
-  getWorldPos,
-};
+export { setViewDimension, draw, getWorldPos, getViewPos, w, g };

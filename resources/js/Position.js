@@ -1,6 +1,3 @@
-const posToString = (pos) => {
-    return `(${pos.x},${pos.y})`;
-};
 const pos = {
     new: (x, y) => {
         return {
@@ -29,6 +26,7 @@ const pos = {
     x: (...positions) => {
         return positions.reduce((last, cur, i) => last + (i % 2 === 0 ? 1 : -1) * cur.x, 0);
     },
+    spread: (p) => Object.values(p),
+    string: (p) => `(${p.x},${p.y})`,
 };
 export default pos;
-export { posToString };

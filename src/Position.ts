@@ -3,10 +3,6 @@ type Position = {
   y: number;
 };
 
-const posToString = (pos: Position): string => {
-  return `(${pos.x},${pos.y})`;
-};
-
 const pos = {
   new: (x: number, y: number): Position => {
     return {
@@ -41,7 +37,10 @@ const pos = {
       0
     );
   },
+  spread: (p: Position): [number, number] =>
+    Object.values(p) as [number, number],
+  string: (p: Position): string => `(${p.x},${p.y})`,
 };
 
 export default pos;
-export { Position, posToString };
+export { Position };

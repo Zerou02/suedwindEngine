@@ -14,23 +14,16 @@ const g = {
     },
     setOrigin: (x, y) => (g.origin = pos.new(x, y)),
     setScale: (scale) => (g.scale = scale),
-    getScreenCoordinates: (xBoard, yBoard) => pos.add(g.origin, pos.scale(g.scale, pos.new(xBoard, yBoard))),
+    getScreenCoordinates: (xView, yView) => pos.add(g.origin, pos.scale(g.scale, pos.new(xView, yView))),
+    getWorldPos: (xView, yView) => getWorldPos(...pos.spread(g.getScreenCoordinates(xView, yView))),
 };
-const w = {
-    origin: pos.new(0, 0),
-    components: {
-        0: [
-            { type: "rect", origin: pos.new(-100, -100), width: 1000, height: 600 },
-        ],
-    },
+const getViewPos = (xScreen, yScreen) => {
+    return pos.scale(1 / g.scale, pos.add(pos.new(xScreen, yScreen), pos.scale(-1, g.origin)));
 };
-const getViewPos = (x, y) => {
-    return pos.new(...Object.values(pos.scale(1 / g.scale, pos.add(pos.new(x, y), pos.scale(-1, g.origin)))).filter((_, i) => i < 2));
+const getWorldPos = (xScreen, yScreen) => {
+    return pos.add(pos.add(getViewPos(xScreen, yScreen), pos.scale(-1, w.origin)), g.origin);
 };
-const getWorldPos = (x, y) => {
-    return pos.add(pos.add(getViewPos(x, y), pos.scale(-1, w.origin)), g.origin);
-};
-const initGraphic = (viewOrigin = pos.new(100, 15), viewEnd = pos.new(-100, -15), scale = -1) => {
+const setViewDimension = (viewOrigin = pos.new(100, 15), viewEnd = pos.new(-100, -15), scale = -1) => {
     const width = window.innerWidth - viewOrigin.x + viewEnd.x;
     const height = window.innerHeight - viewOrigin.y + viewEnd.y;
     body.append(c);
@@ -54,7 +47,16 @@ const initGraphic = (viewOrigin = pos.new(100, 15), viewEnd = pos.new(-100, -15)
     };
     sizeC();
     scaleG();
-    w.origin = pos.new(g.origin.x + g.viewWidth / 2, g.origin.y + g.viewHeight / 2);
+};
+const w = {
+    origin: pos.new(100, 100),
+    components: {
+        0: [
+            { type: "rect", origin: pos.new(-100, -100), width: 1000, height: 600 },
+        ],
+    },
+    getScreenCoordinates: (xWorld, yWorld) => pos.add(pos.new(xWorld, yWorld), w.origin),
+    getViewPos: (xWorld, yWorld) => getViewPos(...pos.spread(w.getScreenCoordinates(xWorld, yWorld))),
 };
 const draw = () => {
     if ("w" in pressedKeys)
@@ -87,4 +89,4 @@ const draw = () => {
         }
     }));
 };
-export { initGraphic, draw, getWorldPos, };
+export { setViewDimension, draw, getWorldPos, getViewPos, w, g };
