@@ -2,6 +2,8 @@ import { createElement, positionElement, sizeElement } from "./DOM.js";
 import { body } from "./index.js";
 import pos, { Position } from "./Position.js";
 
+type MenuBarId = "left" | "right" | "top" | "bottom";
+
 let borderThickness = 2;
 const Controller = {
   MenuBarDimensions: {
@@ -41,6 +43,12 @@ const Controller = {
     rightMenu.remove();
     bottomMenu.remove();
   },
+  appendToMenuBar: (menuBar: MenuBarId, element: HTMLElement) =>
+    document.getElementById(menuBar)?.append(element),
+  toggleMenuBarResize: (menubar: MenuBarId) =>
+    resizableMenuBars.includes(menubar)
+      ? resizableMenuBars.filter((id) => id !== menubar)
+      : resizableMenuBars.push(menubar),
 };
 
 const idToDimensionKey = {
@@ -49,6 +57,8 @@ const idToDimensionKey = {
   top: "topHeight",
   bottom: "bottomHeight",
 };
+
+let resizableMenuBars: MenuBarId[] = ["left", "bottom", "right", "top"];
 
 const topMenu = createElement("top", "div", "menuBar") as HTMLDivElement;
 const leftMenu = createElement("left", "div", "menuBar") as HTMLDivElement;
@@ -130,7 +140,7 @@ const LastDimension = {
 };
 const minMaxOnDoubleClickNearBorder = () => {
   if (!menuResizeTarget) return;
-  const id = menuResizeTarget.id as "left" | "right" | "top" | "bottom";
+  const id = menuResizeTarget.id as MenuBarId;
   const border = idToDimensionKey[id] as
     | "leftWidth"
     | "rightWidth"
@@ -171,14 +181,19 @@ const handleMouseMoveNearBorder = (event: MouseEvent) => {
   ) {
     body.style.cursor = "ns-resize";
     menuResizeTarget = topBorder ? topMenu : bottomMenu;
-  } else {
-    if (!resizeStart) {
-      body.style.cursor = "default";
-      menuResizeTarget = null;
-    }
+  } else if (!resizeStart) {
+    body.style.cursor = "default";
+    menuResizeTarget = null;
+  }
+  if (
+    menuResizeTarget &&
+    !resizableMenuBars.includes(menuResizeTarget.id as MenuBarId)
+  ) {
+    body.style.cursor = "default";
+    menuResizeTarget = null;
   }
   if (!resizeStart || !menuResizeTarget) return;
-  const id = menuResizeTarget.id as "left" | "right" | "top" | "bottom";
+  const id = menuResizeTarget.id as MenuBarId;
   const border = idToDimensionKey[id] as
     | "leftWidth"
     | "rightWidth"
@@ -231,21 +246,20 @@ const initMenuBars = (
       bottomHeight: number;
     };
     borderThickness?: number;
+    resizableMenus?: MenuBarId[];
   } = {
     MinDimensions: Controller.MinDimensions,
     borderThickness: borderThickness,
+    resizableMenus: resizableMenuBars,
   }
 ) => {
   if (options.MinDimensions) Controller.MinDimensions = options.MinDimensions;
   Object.freeze(Controller.MinDimensions);
-  Object.freeze(Controller.start);
-  Object.freeze(Controller.pause);
-  Object.freeze(Controller.close);
-  Object.freeze(Controller.setBorderThickness);
   Object.seal(Controller);
   Object.seal(Controller.MenuBarDimensions);
   Controller.start();
   resizeCallback = onResize;
+  if (options.resizableMenus) resizableMenuBars = options.resizableMenus;
 
   if (options.borderThickness)
     Controller.setBorderThickness(options.borderThickness);

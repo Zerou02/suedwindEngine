@@ -6,10 +6,11 @@
 
 body {
   --borderThickness: 2px;
+  --menuBGColor: rgb(66 43 43);
 }
 
 .menuBar {
-  background-color: transparent;
+  background-color: var(--menuBGColor);
   border: var(--borderThickness) solid black;
   position: absolute;
 }

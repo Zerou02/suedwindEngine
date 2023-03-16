@@ -40,6 +40,10 @@ const Controller = {
         rightMenu.remove();
         bottomMenu.remove();
     },
+    appendToMenuBar: (menuBar, element) => document.getElementById(menuBar)?.append(element),
+    toggleMenuBarResize: (menubar) => resizableMenuBars.includes(menubar)
+        ? resizableMenuBars.filter((id) => id !== menubar)
+        : resizableMenuBars.push(menubar),
 };
 const idToDimensionKey = {
     left: "leftWidth",
@@ -47,6 +51,7 @@ const idToDimensionKey = {
     top: "topHeight",
     bottom: "bottomHeight",
 };
+let resizableMenuBars = ["left", "bottom", "right", "top"];
 const topMenu = createElement("top", "div", "menuBar");
 const leftMenu = createElement("left", "div", "menuBar");
 const rightMenu = createElement("right", "div", "menuBar");
@@ -122,11 +127,14 @@ const handleMouseMoveNearBorder = (event) => {
         body.style.cursor = "ns-resize";
         menuResizeTarget = topBorder ? topMenu : bottomMenu;
     }
-    else {
-        if (!resizeStart) {
-            body.style.cursor = "default";
-            menuResizeTarget = null;
-        }
+    else if (!resizeStart) {
+        body.style.cursor = "default";
+        menuResizeTarget = null;
+    }
+    if (menuResizeTarget &&
+        !resizableMenuBars.includes(menuResizeTarget.id)) {
+        body.style.cursor = "default";
+        menuResizeTarget = null;
     }
     if (!resizeStart || !menuResizeTarget)
         return;
@@ -168,18 +176,17 @@ const resetResizeState = () => {
 const initMenuBars = (onResize, options = {
     MinDimensions: Controller.MinDimensions,
     borderThickness: borderThickness,
+    resizableMenus: resizableMenuBars,
 }) => {
     if (options.MinDimensions)
         Controller.MinDimensions = options.MinDimensions;
     Object.freeze(Controller.MinDimensions);
-    Object.freeze(Controller.start);
-    Object.freeze(Controller.pause);
-    Object.freeze(Controller.close);
-    Object.freeze(Controller.setBorderThickness);
     Object.seal(Controller);
     Object.seal(Controller.MenuBarDimensions);
     Controller.start();
     resizeCallback = onResize;
+    if (options.resizableMenus)
+        resizableMenuBars = options.resizableMenus;
     if (options.borderThickness)
         Controller.setBorderThickness(options.borderThickness);
     body.append(topMenu, leftMenu, rightMenu, bottomMenu);
