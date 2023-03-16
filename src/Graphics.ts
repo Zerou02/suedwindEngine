@@ -16,24 +16,6 @@ const g = {
   },
   setOrigin: (x: number, y: number) => (g.origin = pos.new(x, y)),
   setScale: (scale: number) => (g.scale = scale),
-  getScreenCoordinates: (xView: number, yView: number) =>
-    pos.add(g.origin, pos.scale(g.scale, pos.new(xView, yView))),
-  getWorldPos: (xView: number, yView: number) =>
-    getWorldPos(...pos.spread(g.getScreenCoordinates(xView, yView))),
-};
-
-const getViewPos = (xScreen: number, yScreen: number) => {
-  return pos.scale(
-    1 / g.scale,
-    pos.add(pos.new(xScreen, yScreen), pos.scale(-1, g.origin))
-  );
-};
-
-const getWorldPos = (xScreen: number, yScreen: number) => {
-  return pos.add(
-    pos.add(getViewPos(xScreen, yScreen), pos.scale(-1, w.origin)),
-    g.origin
-  );
 };
 
 const setViewDimension = (
@@ -75,22 +57,15 @@ const setViewDimension = (
 type WorldObjects = {
   type: string;
   origin: Position;
-  width: number;
-  height: number;
+  end: Position;
 };
 
 const w = {
   origin: pos.new(100, 100),
   //Keeps track of all the things in the world, sorted in Layers
   components: {
-    0: [
-      { type: "rect", origin: pos.new(-100, -100), width: 1000, height: 600 },
-    ],
+    0: [{ type: "rect", origin: pos.new(-100, -100), end: pos.new(900, 500) }],
   } as { [keys: number]: WorldObjects[] },
-  getScreenCoordinates: (xWorld: number, yWorld: number) =>
-    pos.add(pos.new(xWorld, yWorld), w.origin),
-  getViewPos: (xWorld: number, yWorld: number) =>
-    getViewPos(...pos.spread(w.getScreenCoordinates(xWorld, yWorld))),
 };
 
 const draw = () => {
@@ -115,7 +90,7 @@ const draw = () => {
           let o = pos.add(comp.origin, origin);
           if (o.x <= g.origin.x) o.x = g.origin.x;
           if (o.y <= g.origin.y) o.y = g.origin.y;
-          let e = pos.add(o, pos.new(comp.width, comp.height));
+          let e = pos.add(o, pos.add(comp.end, pos.negate(comp.origin)));
           if (e.x > end.x) e.x = end.x;
           if (e.y > end.y) e.y = end.y;
           context.fillRect(o.x, o.y, e.x - o.x, e.y - o.y);
@@ -125,4 +100,21 @@ const draw = () => {
   );
 };
 
-export { setViewDimension, draw, getWorldPos, getViewPos, w, g };
+const CoordConversion = {
+  ScreenToWorld: (pScreen: Position) =>
+    pos.add(
+      pos.add(CoordConversion.ScreenToView(pScreen), pos.negate(w.origin)),
+      g.origin
+    ),
+  ScreenToView: (pScreen: Position) =>
+    pos.scale(1 / g.scale, pos.add(pScreen, pos.negate(g.origin))),
+  ViewToScreen: (pView: Position) =>
+    pos.add(g.origin, pos.scale(g.scale, pView)),
+  ViewToWorld: (pView: Position) =>
+    CoordConversion.ScreenToWorld(CoordConversion.ViewToScreen(pView)),
+  WorldToScreen: (pWorld: Position) => pos.add(pWorld, w.origin),
+  WorldToView: (pWorld: Position) =>
+    CoordConversion.ScreenToView(CoordConversion.WorldToScreen(pWorld)),
+};
+
+export { setViewDimension, draw, CoordConversion };

@@ -17,6 +17,9 @@ const pos = {
             y: a * b.y,
         };
     },
+    negate: (a) => {
+        return pos.scale(-1, a);
+    },
     dist: (a, b) => {
         return Math.abs(pos.y(a, b)) + Math.abs(pos.x(a, b));
     },

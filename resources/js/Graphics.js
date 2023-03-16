@@ -14,14 +14,6 @@ const g = {
     },
     setOrigin: (x, y) => (g.origin = pos.new(x, y)),
     setScale: (scale) => (g.scale = scale),
-    getScreenCoordinates: (xView, yView) => pos.add(g.origin, pos.scale(g.scale, pos.new(xView, yView))),
-    getWorldPos: (xView, yView) => getWorldPos(...pos.spread(g.getScreenCoordinates(xView, yView))),
-};
-const getViewPos = (xScreen, yScreen) => {
-    return pos.scale(1 / g.scale, pos.add(pos.new(xScreen, yScreen), pos.scale(-1, g.origin)));
-};
-const getWorldPos = (xScreen, yScreen) => {
-    return pos.add(pos.add(getViewPos(xScreen, yScreen), pos.scale(-1, w.origin)), g.origin);
 };
 const setViewDimension = (viewOrigin = pos.new(100, 15), viewEnd = pos.new(-100, -15), scale = -1) => {
     const width = window.innerWidth - viewOrigin.x + viewEnd.x;
@@ -51,12 +43,8 @@ const setViewDimension = (viewOrigin = pos.new(100, 15), viewEnd = pos.new(-100,
 const w = {
     origin: pos.new(100, 100),
     components: {
-        0: [
-            { type: "rect", origin: pos.new(-100, -100), width: 1000, height: 600 },
-        ],
+        0: [{ type: "rect", origin: pos.new(-100, -100), end: pos.new(900, 500) }],
     },
-    getScreenCoordinates: (xWorld, yWorld) => pos.add(pos.new(xWorld, yWorld), w.origin),
-    getViewPos: (xWorld, yWorld) => getViewPos(...pos.spread(w.getScreenCoordinates(xWorld, yWorld))),
 };
 const draw = () => {
     if ("w" in pressedKeys)
@@ -79,7 +67,7 @@ const draw = () => {
                     o.x = g.origin.x;
                 if (o.y <= g.origin.y)
                     o.y = g.origin.y;
-                let e = pos.add(o, pos.new(comp.width, comp.height));
+                let e = pos.add(o, pos.add(comp.end, pos.negate(comp.origin)));
                 if (e.x > end.x)
                     e.x = end.x;
                 if (e.y > end.y)
@@ -89,4 +77,12 @@ const draw = () => {
         }
     }));
 };
-export { setViewDimension, draw, getWorldPos, getViewPos, w, g };
+const CoordConversion = {
+    ScreenToWorld: (pScreen) => pos.add(pos.add(CoordConversion.ScreenToView(pScreen), pos.negate(w.origin)), g.origin),
+    ScreenToView: (pScreen) => pos.scale(1 / g.scale, pos.add(pScreen, pos.negate(g.origin))),
+    ViewToScreen: (pView) => pos.add(g.origin, pos.scale(g.scale, pView)),
+    ViewToWorld: (pView) => CoordConversion.ScreenToWorld(CoordConversion.ViewToScreen(pView)),
+    WorldToScreen: (pWorld) => pos.add(pWorld, w.origin),
+    WorldToView: (pWorld) => CoordConversion.ScreenToView(CoordConversion.WorldToScreen(pWorld)),
+};
+export { setViewDimension, draw, CoordConversion };

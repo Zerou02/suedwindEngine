@@ -22,6 +22,9 @@ const pos = {
       y: a * b.y,
     };
   },
+  negate: (a: Position): Position => {
+    return pos.scale(-1, a);
+  },
   dist: (a: Position, b: Position): number => {
     return Math.abs(pos.y(a, b)) + Math.abs(pos.x(a, b));
   },
