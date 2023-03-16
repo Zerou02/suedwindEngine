@@ -3,7 +3,6 @@ export interface Dimensions {
   y: number;
   w: number;
   h: number;
-  rotationDegrees: number;
 }
 
 export interface Transform {

@@ -6,6 +6,7 @@ export class SpriteManager {
   constructor(sprites: Sprite[] = []) {
     this.sprites = sprites;
   }
+
   addSprite = (sprite: Sprite) => {
     this.sprites.push(sprite);
   };

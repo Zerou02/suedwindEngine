@@ -5,11 +5,13 @@ import { SpriteManager } from "./SpriteManager.js";
 export class DrawManager {
   spriteManager: SpriteManager;
   layerManager: LayerManager;
+  _intervalID: number;
+
   constructor(scene: Scene) {
     this.spriteManager = scene.spriteManager;
     this.layerManager = scene.layerManager;
 
-    setInterval(() => this.redrawFn(), 1000 / 30);
+    this._intervalID = setInterval(() => this.redrawFn(), 1000 / 30);
   }
 
   redrawFn() {
@@ -23,5 +25,13 @@ export class DrawManager {
     Object.values(this.spriteManager.sprites).forEach((x) => {
       if (x.layer.shouldRedraw) x.draw();
     });
+  }
+
+  deconstruct (){
+    clearInterval(this._intervalID);
+    const canvases = Object.values(this.layerManager.layers);
+    for (let a=0; a<canvases.length; a++){
+      canvases[a].canvas.remove();
+    }
   }
 }

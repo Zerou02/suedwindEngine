@@ -33,7 +33,6 @@ export class Sprite {
         y: position.y,
         h: size.y,
         w: size.x,
-        rotationDegrees: 0,
       },
       layer: 0,
     };
@@ -58,10 +57,6 @@ export class Sprite {
   increaseSize = (rect: Coordinate2d) => {
     this.transform.dimensions.h += rect.y;
     this.transform.dimensions.w += rect.x;
-  };
-
-  rotate = (rotationDegrees: number) => {
-    this.transform.dimensions.rotationDegrees = rotationDegrees;
   };
 
   setLayer = (layer: Layer) => {

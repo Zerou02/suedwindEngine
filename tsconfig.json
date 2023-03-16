@@ -13,5 +13,5 @@
     "noUnusedLocals": false,
     "noUnusedParameters": false
   },
-  "include": ["./src/*"]
+  "include": ["./src/*", "src/core/canvasUtils.ts", "src/core/globals.ts", "src/core/KeyBoardManager.ts", "src/core/Entity.ts", "src/core/utils.ts"]
 }

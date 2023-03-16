@@ -12,9 +12,11 @@ interface LayerMap {
 export class LayerManager {
   layers: LayerMap;
   orderedLayers: Layer[] = [];
+  rootElement: HTMLElement;
 
-  constructor() {
+  constructor(rootElement: HTMLElement) {
     this.layers = {};
+    this.rootElement = rootElement;
   }
 
   addLayer = (
@@ -33,6 +35,7 @@ export class LayerManager {
     this.layers[name] = newLayer;
     this.orderedLayers.push(newLayer);
     this.orderedLayers = this.orderedLayers.sort((a, b) => a.level - b.level);
+    this.rootElement.append(newLayer.canvas);
   };
 
   setRedrawFlag = (layerName: string, flag: boolean) => {

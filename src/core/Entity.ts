@@ -3,7 +3,7 @@ import { Scene } from "./Scene.js";
 import { Sprite } from "./Sprite.js";
 import { Coordinate2d } from "./types.js";
 
-export class Player {
+export class Entity {
   sprite: Sprite;
   colBox: CollisionBox;
   scene: Scene;
