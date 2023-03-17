@@ -85,4 +85,4 @@ const CoordConversion = {
     WorldToScreen: (pWorld) => pos.add(pWorld, w.origin),
     WorldToView: (pWorld) => CoordConversion.ScreenToView(CoordConversion.WorldToScreen(pWorld)),
 };
-export { setViewDimension, draw, CoordConversion };
+export { setViewDimension, draw, CoordConversion, w };

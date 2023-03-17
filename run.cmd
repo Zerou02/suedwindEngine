@@ -1,1 +1,1 @@
-neu run -- --url=/%1/resources/
+tsc -p ./%1/tsconfig.json && neu run -- --url=/%1/resources/

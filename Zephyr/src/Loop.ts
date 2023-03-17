@@ -1,4 +1,5 @@
 import { draw } from "./Graphics.js";
+import { sizeMenuBars } from "./MenuBars.js";
 
 const FPSTARGET = 30;
 
@@ -16,11 +17,15 @@ let end = false;
 let lastTime = 0;
 const Loop = (time: number) => {
   const delta = time - lastTime;
-  if (delta >= 1000 / FPSTARGET) update();
+  if (delta >= 1000 / FPSTARGET) {
+    lastTime = time;
+    update();
+  }
   if (!end) window.requestAnimationFrame(Loop);
 };
 
 const update = () => {
+  sizeMenuBars()
   draw();
 };
 

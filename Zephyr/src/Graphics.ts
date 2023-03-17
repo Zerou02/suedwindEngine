@@ -117,4 +117,4 @@ const CoordConversion = {
     CoordConversion.ScreenToView(CoordConversion.WorldToScreen(pWorld)),
 };
 
-export { setViewDimension, draw, CoordConversion };
+export { setViewDimension, draw, CoordConversion, w };
