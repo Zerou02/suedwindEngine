@@ -1,0 +1,16 @@
+* {
+  margin: 0px;
+  padding: 0px;
+  overflow: hidden;
+}
+
+body {
+  --borderThickness: 2px;
+  --menuBGColor: rgb(66 43 43);
+}
+
+.menuBar {
+  background-color: var(--menuBGColor);
+  border: var(--borderThickness) solid black;
+  position: absolute;
+}

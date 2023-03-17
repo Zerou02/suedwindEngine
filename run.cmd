@@ -1,0 +1,1 @@
+neu run -- --url=/%1/resources/
