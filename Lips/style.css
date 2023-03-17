@@ -1,0 +1,7 @@
+/*! @theme buw */
+
+@import "default";
+
+.text-over-img h1 {
+  z-index: 2;
+}
