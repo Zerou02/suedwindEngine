@@ -53,9 +53,13 @@ const idToDimensionKey = {
 };
 let resizableMenuBars = ["left", "bottom", "right", "top"];
 const topMenu = createElement("top", "div", "menuBar");
+topMenu.draggable = false;
 const leftMenu = createElement("left", "div", "menuBar");
+leftMenu.draggable = false;
 const rightMenu = createElement("right", "div", "menuBar");
+rightMenu.draggable = false;
 const bottomMenu = createElement("bottom", "div", "menuBar");
+bottomMenu.draggable = false;
 let resizeCallback = (origin, end) => {
     console.log("No resizeCallback set.");
     console.log(origin, end);

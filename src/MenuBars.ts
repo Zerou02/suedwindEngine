@@ -61,9 +61,13 @@ const idToDimensionKey = {
 let resizableMenuBars: MenuBarId[] = ["left", "bottom", "right", "top"];
 
 const topMenu = createElement("top", "div", "menuBar") as HTMLDivElement;
+topMenu.draggable = false;
 const leftMenu = createElement("left", "div", "menuBar") as HTMLDivElement;
+leftMenu.draggable = false;
 const rightMenu = createElement("right", "div", "menuBar") as HTMLDivElement;
+rightMenu.draggable = false;
 const bottomMenu = createElement("bottom", "div", "menuBar") as HTMLDivElement;
+bottomMenu.draggable = false;
 
 let resizeCallback: (origin: Position, end: Position) => void = (
   origin: Position,
