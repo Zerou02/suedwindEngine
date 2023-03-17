@@ -4,6 +4,10 @@ import { LayerManager } from "./LayerManager.js";
 import { createDiv } from "./menuItems.js";
 import { SpriteManager } from "./SpriteManager.js";
 
+interface MenuItemMap {
+  [key: string]: HTMLElement;
+}
+
 export class Scene {
   collisionManager: CollisionManager;
   spriteManager: SpriteManager;
@@ -12,15 +16,16 @@ export class Scene {
   rootElement: HTMLBodyElement;
   layerRoot: HTMLDivElement;
   menuRoot: HTMLDivElement;
+  menuItems: MenuItemMap = {};
 
   constructor() {
     this.collisionManager = new CollisionManager([]);
     this.spriteManager = new SpriteManager();
 
     this.rootElement = document.getElementById("body") as HTMLBodyElement;
-    this.layerRoot = createDiv({ x: 0, y: 0 });
+    this.layerRoot = createDiv({ x: 0, y: 0 }, "layerRoot");
     this.layerRoot.style.zIndex = "0";
-    this.menuRoot = createDiv({ x: 0, y: 0 });
+    this.menuRoot = createDiv({ x: 0, y: 0 }, "menuRoot");
     this.menuRoot.style.zIndex = "1";
     this.rootElement.append(this.layerRoot, this.menuRoot);
 
@@ -36,5 +41,6 @@ export class Scene {
 
   addMenuItem(item: HTMLElement) {
     this.menuRoot.append(item);
+    this.menuItems[item.id] = item;
   }
 }

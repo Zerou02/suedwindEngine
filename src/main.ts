@@ -5,7 +5,9 @@ import { Scene } from "./core/Scene.js";
 import { Sprite } from "./core/Sprite.js";
 import { createButton, createCanvas } from "./core/menuItems.js";
 
-const initialize = () => {
+import { TileMapEditorScene } from "./core/TileMapEditor/TileMapEditorScene.js";
+
+const initializeTest = () => {
   const baseScene = new Scene();
 
   let canvas = createCanvas(800, 600);
@@ -13,7 +15,8 @@ const initialize = () => {
   let testButton = createButton(
     { x: 0, y: 100, h: 100, w: 200 },
     "Destroy world",
-    (e) => baseScene.deconstruct()
+    (e) => baseScene.deconstruct(),
+    "testButton"
   );
 
   baseScene.addMenuItem(testButton);
@@ -64,4 +67,17 @@ const initialize = () => {
 
   console.log(baseScene.layerManager);
 };
-initialize();
+//initialize();
+
+//let ti = new TileMapEditorScene(gAssetPath + "tiles/spritesheet.png");
+
+//@ts-ignore
+let data = await Neutralino.filesystem.readFile({
+  fileName: gAssetPath + "test.txt",
+});
+let view = new Uint8Array(data);
+
+console.log("Binary content: ", view);
+
+//@ts-ignore
+Neutralino.init();

@@ -3,11 +3,11 @@ import { Entity } from "./core/Entity.js";
 import { Scene } from "./core/Scene.js";
 import { Sprite } from "./core/Sprite.js";
 import { createButton, createCanvas } from "./core/menuItems.js";
-const initialize = () => {
+const initializeTest = () => {
     const baseScene = new Scene();
     let canvas = createCanvas(800, 600);
     let top = createCanvas(400, 300);
-    let testButton = createButton({ x: 0, y: 100, h: 100, w: 200 }, "Destroy world", (e) => baseScene.deconstruct());
+    let testButton = createButton({ x: 0, y: 100, h: 100, w: 200 }, "Destroy world", (e) => baseScene.deconstruct(), "testButton");
     baseScene.addMenuItem(testButton);
     baseScene.layerManager.addLayer("veryTop", createCanvas(800, 600), 2, false);
     baseScene.layerManager.addLayer("top", top, 1, true);
@@ -33,4 +33,9 @@ const initialize = () => {
     gKeyBoardManager.addFunction("l", (e) => baseScene.deconstruct());
     console.log(baseScene.layerManager);
 };
-initialize();
+let data = await Neutralino.filesystem.readFile({
+    fileName: gAssetPath + "test.txt",
+});
+let view = new Uint8Array(data);
+console.log("Binary content: ", view);
+Neutralino.init();
