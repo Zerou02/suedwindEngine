@@ -1,3 +1,4 @@
+import { gLoopManager } from "./globals.js";
 export class KeyboardManager {
     constructor() {
         this.keys = {};
@@ -18,7 +19,7 @@ export class KeyboardManager {
         window.addEventListener("keyup", (e) => {
             this.keys[e.key].pressed = false;
         });
-        setInterval(() => this.keyBoardEval(), 1000 / 30);
+        gLoopManager.addFn(() => this.keyBoardEval());
     }
     keyBoardEval() {
         this._keysArrayMapped.forEach((x) => {

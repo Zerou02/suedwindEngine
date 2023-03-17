@@ -1,3 +1,4 @@
+import { gKeyBoardManager, gLoopManager } from "./globals.js";
 import { LayerManager } from "./LayerManager.js";
 import { Scene } from "./Scene.js";
 import { SpriteManager } from "./SpriteManager.js";
@@ -11,7 +12,7 @@ export class DrawManager {
     this.spriteManager = scene.spriteManager;
     this.layerManager = scene.layerManager;
 
-    this._intervalID = setInterval(() => this.redrawFn(), 1000 / 30);
+    gLoopManager.addFn(() => this.redrawFn());
   }
 
   redrawFn() {

@@ -67,11 +67,9 @@ const initializeTest = () => {
 
   console.log(baseScene.layerManager);
 };
-//initializeTest();
+initializeTest();
 
 let ti = new TileMapEditorScene(gAssetPath + "tiles/spritesheet.png");
 
 //@ts-ignore
 //Neutralino.init();
-
-console.log("SAFDFAWEF");

@@ -34,5 +34,5 @@ const initializeTest = () => {
     gKeyBoardManager.addFunction("l", (e) => baseScene.deconstruct());
     console.log(baseScene.layerManager);
 };
+initializeTest();
 let ti = new TileMapEditorScene(gAssetPath + "tiles/spritesheet.png");
-console.log("SAFDFAWEF");

@@ -1,8 +1,9 @@
+import { gLoopManager } from "./globals.js";
 export class DrawManager {
     constructor(scene) {
         this.spriteManager = scene.spriteManager;
         this.layerManager = scene.layerManager;
-        this._intervalID = setInterval(() => this.redrawFn(), 1000 / 30);
+        gLoopManager.addFn(() => this.redrawFn());
     }
     redrawFn() {
         this.layerManager.orderedLayers.forEach((x) => {

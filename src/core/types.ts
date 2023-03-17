@@ -14,3 +14,5 @@ export interface Coordinate2d {
   x: number;
   y: number;
 }
+
+export type BasicShape = "Rectangle";

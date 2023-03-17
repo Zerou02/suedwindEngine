@@ -1,3 +1,5 @@
+import { gLoopManager } from "./globals.js";
+
 interface KeyMapVal {
   pressed: boolean;
   fn: CallableFunction;
@@ -36,7 +38,7 @@ export class KeyboardManager {
       this.keys[e.key].pressed = false;
     });
 
-    setInterval(() => this.keyBoardEval(), 1000 / 30);
+    gLoopManager.addFn(() => this.keyBoardEval());
   }
 
   keyBoardEval() {
