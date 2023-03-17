@@ -18,7 +18,7 @@ export class Sprite {
     src: string,
     layer: Layer,
     position: Coordinate2d,
-    size: Coordinate2d,
+    size: Coordinate2d | null,
     scene: Scene
   ) {
     this.src = src;
@@ -31,14 +31,20 @@ export class Sprite {
       dimensions: {
         x: position.x,
         y: position.y,
-        h: size.y,
-        w: size.x,
+        h: size?.y || 0,
+        w: size?.x || 0,
       },
       layer: 0,
     };
 
-    drawImage(this.ctx, src, position, (img) => {
+    console.log(this.transform);
+
+    drawImage(this.ctx, src, position, size, (img) => {
       this.imgElement = img;
+      if (size === null) {
+        this.transform.dimensions.w = img.clientWidth;
+        this.transform.dimensions.h = img.clientHeight;
+      }
       this.scene.spriteManager.addSprite(this);
     });
     this.id = assignID();
@@ -67,6 +73,8 @@ export class Sprite {
   // TODO: Rotation zeichnen
   draw = () => {
     const d = this.transform.dimensions;
+    console.log(d.w, d.h);
+
     this.ctx.drawImage(this.imgElement, d.x, d.y, d.w, d.h);
   };
 }

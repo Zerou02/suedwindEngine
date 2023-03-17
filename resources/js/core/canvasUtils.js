@@ -1,8 +1,13 @@
-export const drawImage = (ctx, imgPath, position, onLoadFn) => {
+export const drawImage = (ctx, imgPath, position, size, onLoadFn) => {
     let ima = new Image();
     ima.src = imgPath;
     ima.onload = () => {
-        ctx.drawImage(ima, position.x, position.y);
+        if (size) {
+            ctx.drawImage(ima, position.x, position.y, size.x, size.y);
+        }
+        else {
+            ctx.drawImage(ima, position.x, position.y);
+        }
         onLoadFn(ima);
     };
 };

@@ -14,7 +14,7 @@ export class TileMapEditorScene {
       spriteSheetSrc,
       baseLevel,
       { x: 0, y: 0 },
-      { x: 300, y: 400 },
+      null,
       this.scene
     );
   }

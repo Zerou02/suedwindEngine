@@ -3,6 +3,7 @@ import { Entity } from "./core/Entity.js";
 import { Scene } from "./core/Scene.js";
 import { Sprite } from "./core/Sprite.js";
 import { createButton, createCanvas } from "./core/menuItems.js";
+import { TileMapEditorScene } from "./core/TileMapEditor/TileMapEditorScene.js";
 const initializeTest = () => {
     const baseScene = new Scene();
     let canvas = createCanvas(800, 600);
@@ -33,9 +34,5 @@ const initializeTest = () => {
     gKeyBoardManager.addFunction("l", (e) => baseScene.deconstruct());
     console.log(baseScene.layerManager);
 };
-let data = await Neutralino.filesystem.readFile({
-    fileName: gAssetPath + "test.txt",
-});
-let view = new Uint8Array(data);
-console.log("Binary content: ", view);
-Neutralino.init();
+let ti = new TileMapEditorScene(gAssetPath + "tiles/spritesheet.png");
+console.log("SAFDFAWEF");

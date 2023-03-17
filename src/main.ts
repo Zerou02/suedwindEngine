@@ -67,17 +67,11 @@ const initializeTest = () => {
 
   console.log(baseScene.layerManager);
 };
-//initialize();
+//initializeTest();
 
-//let ti = new TileMapEditorScene(gAssetPath + "tiles/spritesheet.png");
-
-//@ts-ignore
-let data = await Neutralino.filesystem.readFile({
-  fileName: gAssetPath + "test.txt",
-});
-let view = new Uint8Array(data);
-
-console.log("Binary content: ", view);
+let ti = new TileMapEditorScene(gAssetPath + "tiles/spritesheet.png");
 
 //@ts-ignore
-Neutralino.init();
+//Neutralino.init();
+
+console.log("SAFDFAWEF");

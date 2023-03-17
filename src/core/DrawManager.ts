@@ -27,10 +27,10 @@ export class DrawManager {
     });
   }
 
-  deconstruct (){
+  deconstruct() {
     clearInterval(this._intervalID);
     const canvases = Object.values(this.layerManager.layers);
-    for (let a=0; a<canvases.length; a++){
+    for (let a = 0; a < canvases.length; a++) {
       canvases[a].canvas.remove();
     }
   }
