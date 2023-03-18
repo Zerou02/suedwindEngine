@@ -5,11 +5,13 @@ import {
   registerComp,
   setViewDimension,
   updateComp,
+  w,
 } from "./Graphics.js";
 import { Loop } from "./Loop.js";
 import initMenuBars from "./MenuBars.js";
 //@ts-ignore
 import colorValues from "../colorValues.json" assert { type: "json" };
+import pos from "./Position.js";
 // //@ts-ignore
 // import { saveWorld, loadWorld } from "../../../EoS/Eos.js";
 
@@ -34,6 +36,7 @@ left.append(addRect);
 
 let clickedWorldObjectPropertyMenu: HTMLDivElement | null = null;
 const clickOnWorldObject = () => {
+  console.log(w.components);
   if (!hoveredWorldObject) return;
   const id = hoveredWorldObject.id;
   if (clickedWorldObjectPropertyMenu) clickedWorldObjectPropertyMenu.remove();
@@ -59,7 +62,7 @@ const clickOnWorldObject = () => {
       const holder = createElement(property, "div", "propertyHolder");
       const name = createElement(`${property}-name`, "span", "propertyName");
       name.innerText = `${property}: `;
-      let val: HTMLInputElement | null = null;
+      let val: any = null;
       if (typeof value === "string") {
         val = createElement(
           `${property}-value`,
@@ -87,7 +90,7 @@ const clickOnWorldObject = () => {
           });
         } else {
           val.value = value;
-          val.addEventListener("keypress", (event) => {
+          val.addEventListener("keypress", (event: KeyboardEvent) => {
             if (event.key !== "Enter") return;
             updateComp(id, {
               property,
@@ -95,8 +98,63 @@ const clickOnWorldObject = () => {
             });
           });
         }
-      } else if (typeof value === "object" && value.x && value.y) {
-        
+      } else if (
+        typeof value === "object" &&
+        value.x !== undefined &&
+        value.y !== undefined
+      ) {
+        name.style.minWidth = `100%`;
+        name.style.textAlign = "left";
+        name.style.borderBottom = "1px solid aliceblue";
+        val = createElement(
+          `${property}Coords`,
+          "div",
+          "holder"
+        ) as HTMLDivElement;
+        val.style.display = "block";
+        const x = createElement(`${property}X`, "div", "holder");
+        const xName = createElement(
+          `${property}X-name`,
+          "span",
+          "propertyName"
+        );
+        xName.innerText = `x: `;
+        const xValue = createElement(
+          `${property}X-value`,
+          "input",
+          "propertyValue"
+        ) as HTMLInputElement;
+        xValue.value = `${value.x}`;
+        xValue.addEventListener("keypress", (event: KeyboardEvent) => {
+          if (event.key !== "Enter") return;
+          updateComp(id, {
+            property,
+            value: pos.new(Number(xValue.value), Number(yValue.value)),
+          });
+        });
+        const y = createElement(`${property}Y`, "div", "holder");
+        const yName = createElement(
+          `${property}Y-name`,
+          "span",
+          "propertyName"
+        );
+        yName.innerText = `y: `;
+        const yValue = createElement(
+          `${property}Y-value`,
+          "input",
+          "propertyValue"
+        ) as HTMLInputElement;
+        yValue.value = `${value.y}`;
+        yValue.addEventListener("keypress", (event: KeyboardEvent) => {
+          if (event.key !== "Enter") return;
+          updateComp(id, {
+            property,
+            value: pos.new(Number(xValue.value), Number(yValue.value)),
+          });
+        });
+        x.append(xName, xValue);
+        y.append(yName, yValue);
+        val.append(x, y);
       }
       if (val) holder.append(name, val);
       else holder.append(name);

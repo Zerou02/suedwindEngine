@@ -1,8 +1,9 @@
 import { createElement } from "./DOM.js";
-import { hoveredWorldObject, initGraphic, registerComp, setViewDimension, updateComp, } from "./Graphics.js";
+import { hoveredWorldObject, initGraphic, registerComp, setViewDimension, updateComp, w, } from "./Graphics.js";
 import { Loop } from "./Loop.js";
 import initMenuBars from "./MenuBars.js";
 import colorValues from "../colorValues.json" assert { type: "json" };
+import pos from "./Position.js";
 window.Neutralino.init();
 const body = document.getElementsByTagName("body")[0];
 initGraphic();
@@ -17,6 +18,7 @@ addRect.addEventListener("click", () => registerComp("", "rect"));
 left.append(addRect);
 let clickedWorldObjectPropertyMenu = null;
 const clickOnWorldObject = () => {
+    console.log(w.components);
     if (!hoveredWorldObject)
         return;
     const id = hoveredWorldObject.id;
@@ -74,7 +76,43 @@ const clickOnWorldObject = () => {
                 });
             }
         }
-        else if (typeof value === "object" && value.x && value.y) {
+        else if (typeof value === "object" &&
+            value.x !== undefined &&
+            value.y !== undefined) {
+            name.style.minWidth = `100%`;
+            name.style.textAlign = "left";
+            name.style.borderBottom = "1px solid aliceblue";
+            val = createElement(`${property}Coords`, "div", "holder");
+            val.style.display = "block";
+            const x = createElement(`${property}X`, "div", "holder");
+            const xName = createElement(`${property}X-name`, "span", "propertyName");
+            xName.innerText = `x: `;
+            const xValue = createElement(`${property}X-value`, "input", "propertyValue");
+            xValue.value = `${value.x}`;
+            xValue.addEventListener("keypress", (event) => {
+                if (event.key !== "Enter")
+                    return;
+                updateComp(id, {
+                    property,
+                    value: pos.new(Number(xValue.value), Number(yValue.value)),
+                });
+            });
+            const y = createElement(`${property}Y`, "div", "holder");
+            const yName = createElement(`${property}Y-name`, "span", "propertyName");
+            yName.innerText = `y: `;
+            const yValue = createElement(`${property}Y-value`, "input", "propertyValue");
+            yValue.value = `${value.y}`;
+            yValue.addEventListener("keypress", (event) => {
+                if (event.key !== "Enter")
+                    return;
+                updateComp(id, {
+                    property,
+                    value: pos.new(Number(xValue.value), Number(yValue.value)),
+                });
+            });
+            x.append(xName, xValue);
+            y.append(yName, yValue);
+            val.append(x, y);
         }
         if (val)
             holder.append(name, val);

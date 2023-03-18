@@ -213,4 +213,5 @@ export {
   shiftWorld,
   hoveredWorldObject,
   initGraphic,
+  w,
 };

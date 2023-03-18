@@ -65,6 +65,14 @@ body {
   display: flex;
   justify-content: space-between;
   padding-left: 5px;
+  flex-wrap: wrap;
+}
+
+.holder {
+  min-width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding-left: 5px;
 }
 
 .propertyValue {
