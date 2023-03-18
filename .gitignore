@@ -7,7 +7,7 @@
 /.tmp
 
 # Neutralinojs client (minified)
-neutralino.js
+# neutralino.js
 
 # Neutralinojs related files
 .storage

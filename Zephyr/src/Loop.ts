@@ -1,5 +1,6 @@
-import { draw } from "./Graphics.js";
+import { draw, shiftWorld } from "./Graphics.js";
 import { sizeMenuBars } from "./MenuBars.js";
+import pos from "./Position.js";
 
 const FPSTARGET = 30;
 
@@ -25,8 +26,13 @@ const Loop = (time: number) => {
 };
 
 const update = () => {
-  sizeMenuBars()
+  sizeMenuBars();
   draw();
+
+  if ("w" in pressedKeys) shiftWorld(pos.new(0, -1));
+  if ("s" in pressedKeys) shiftWorld(pos.new(0, 1));
+  if ("a" in pressedKeys) shiftWorld(pos.new(-1, 0));
+  if ("d" in pressedKeys) shiftWorld(pos.new(1, 0));
 };
 
 export { Loop, pressedKeys };

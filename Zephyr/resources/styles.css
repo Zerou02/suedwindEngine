@@ -2,15 +2,89 @@
   margin: 0px;
   padding: 0px;
   overflow: hidden;
+  user-select: none;
 }
 
 body {
   --borderThickness: 2px;
   --menuBGColor: rgb(66 43 43);
+  --menuHighlightColor: rgb(80, 35, 35);
+  --border-radius: 2px;
 }
 
 .menuBar {
   background-color: var(--menuBGColor);
   border: var(--borderThickness) solid black;
   position: absolute;
+}
+
+.contentHolder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 5px;
+  gap: 2px;
+}
+
+.button {
+  max-width: 200px;
+  width: 90%;
+  border-radius: var(--border-radius);
+  border: var(--borderThickness) solid black;
+  text-align: center;
+  font-size: 1.4rem;
+  color: aliceblue;
+}
+
+.button:hover {
+  border-color: aliceblue;
+  background-color: var(--menuHighlightColor);
+}
+
+.title {
+  max-width: 250px;
+  width: 90%;
+  text-align: center;
+  color: aliceblue;
+  text-shadow: 3px 3px black;
+  padding: 10px;
+  font-size: 2rem;
+}
+
+.propertyHolder {
+  max-width: 250px;
+  width: 90%;
+  text-align: center;
+  color: aliceblue;
+  border: var(--borderThickness) solid black;
+  font-size: 1.4rem;
+  display: flex;
+  justify-content: space-between;
+  padding-left: 5px;
+}
+
+.propertyValue {
+  width: 50%;
+  color: aliceblue;
+  font-size: 1.2rem;
+  font-weight: normal;
+  padding-left: 5px;
+  background-color: var(--menuBGColor);
+}
+.propertyValue:focus {
+  background-color: var(--menuHighlightColor);
+}
+
+input.propertyValue {
+  border-top-style: hidden;
+  border-right-style: hidden;
+  border-left-style: double;
+  border-bottom-style: hidden;
+}
+input.propertyValue:focus {
+  outline: none;
 }
