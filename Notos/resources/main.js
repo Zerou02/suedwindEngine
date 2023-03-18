@@ -5,7 +5,7 @@ import { Sprite } from "./core/Sprite.js";
 import { createButton, createCanvas } from "./core/menuItems.js";
 import { TileMapEditorScene } from "./core/TileMapEditor/TileMapEditorScene.js";
 import { Rectangle } from "./core/Rectangle.js";
-import config from "../../config.json" assert { type: "json" };
+import { EosParser } from "./core/EosParser.js";
 import { loadWorld } from "../../EoS/EoS.js";
 const initializeTest = () => {
     const baseScene = new Scene();
@@ -41,5 +41,10 @@ const initializeTest = () => {
 initializeTest();
 let ti = new TileMapEditorScene(gAssetPath + "tiles/spritesheet.png");
 Neutralino.init();
-let test = loadWorld().then((x) => console.log(x));
-console.log(config);
+let cfgPlain = (await Neutralino.filesystem.readFile("./config.json"));
+let config = JSON.parse(cfgPlain);
+let b = (await loadWorld(cfgPlain.worldPath));
+console.log(b);
+let eosParser = new EosParser();
+let parsed = eosParser.parseEosMap(b);
+console.log("pa", parsed);

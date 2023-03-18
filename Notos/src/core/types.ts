@@ -20,3 +20,13 @@ export interface Coordinate2d {
 export type BasicShape = Rectangle;
 
 export type DrawableObject = BasicShape | Sprite;
+
+export interface EosItem {
+  type: "rect";
+  origin: Coordinate2d;
+  end: Coordinate2d;
+}
+
+export interface EosMap {
+  [key: string]: EosItem[];
+}
