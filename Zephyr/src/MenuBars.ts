@@ -3,7 +3,6 @@ import { body } from "./index.js";
 import pos, { Position } from "./Position.js";
 
 type MenuBarId = "left" | "right" | "top" | "bottom";
-
 let borderThickness = 2;
 const Controller = {
   MenuBarDimensions: {
@@ -45,10 +44,16 @@ const Controller = {
   },
   appendToMenuBar: (menuBar: MenuBarId, element: HTMLElement) =>
     document.getElementById(menuBar)?.append(element),
-  toggleMenuBarResize: (menubar: MenuBarId) =>
-    resizableMenuBars.includes(menubar)
-      ? resizableMenuBars.filter((id) => id !== menubar)
-      : resizableMenuBars.push(menubar),
+  toggleMenuBarResize: (menubar: MenuBarId, bool?: boolean) => {
+    const includes = resizableMenuBars.includes(menubar);
+    if (bool === undefined)
+      includes
+        ? (resizableMenuBars = resizableMenuBars.filter((id) => id !== menubar))
+        : resizableMenuBars.push(menubar);
+    else if (bool && !includes) resizableMenuBars.push(menubar);
+    else if (!bool && includes)
+      resizableMenuBars = resizableMenuBars.filter((id) => id !== menubar);
+  },
 };
 
 const idToDimensionKey = {
@@ -240,32 +245,51 @@ const resetResizeState = () => {
 
 const initMenuBars = (
   onResize: (origin: Position, end: Position) => void,
-  options: {
+  {
+    MinDimensions = Controller.MinDimensions,
+    borderThicknes = borderThickness,
+    resizableMenus = resizableMenuBars,
+    hiddenMenus = [],
+    leftWidth = undefined,
+    rightWidth = undefined,
+    bottomHeight = undefined,
+    topHeight = undefined,
+  }: {
     MinDimensions?: {
-      leftWidth: number;
-      rightWidth: number;
       topHeight: number;
       bottomHeight: number;
+      leftWidth: number;
+      rightWidth: number;
     };
-    borderThickness?: number;
+    topHeight?: number;
+    bottomHeight?: number;
+    leftWidth?: number;
+    rightWidth?: number;
+    borderThicknes?: number;
     resizableMenus?: MenuBarId[];
-  } = {
-    MinDimensions: Controller.MinDimensions,
-    borderThickness: borderThickness,
-    resizableMenus: resizableMenuBars,
-  }
+    hiddenMenus?: MenuBarId[];
+  } = {}
 ) => {
-  if (options.MinDimensions) Controller.MinDimensions = options.MinDimensions;
+  if (MinDimensions) Controller.MinDimensions = MinDimensions;
   Object.freeze(Controller.MinDimensions);
   Object.seal(Controller);
   Object.seal(Controller.MenuBarDimensions);
   Controller.start();
   resizeCallback = onResize;
-  if (options.resizableMenus) resizableMenuBars = options.resizableMenus;
-
-  if (options.borderThickness)
-    Controller.setBorderThickness(options.borderThickness);
+  if (resizableMenus) resizableMenuBars = resizableMenus;
+  if (leftWidth) Controller.MenuBarDimensions.leftWidth = leftWidth;
+  if (rightWidth) Controller.MenuBarDimensions.rightWidth = rightWidth;
+  if (topHeight) Controller.MenuBarDimensions.topHeight = topHeight;
+  if (bottomHeight) Controller.MenuBarDimensions.bottomHeight = bottomHeight;
+  if (borderThicknes) Controller.setBorderThickness(borderThicknes);
   body.append(topMenu, leftMenu, rightMenu, bottomMenu);
+  if (hiddenMenus)
+    hiddenMenus.forEach((menuId) => {
+      menuResizeTarget = document.getElementById(menuId) as HTMLDivElement;
+      minMaxOnDoubleClickNearBorder();
+      menuResizeTarget = null;
+      Controller.toggleMenuBarResize(menuId, false);
+    });
 
   sizeMenuBars();
 

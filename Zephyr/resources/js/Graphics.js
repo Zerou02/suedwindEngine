@@ -1,6 +1,10 @@
 import { body } from "./index.js";
-import { pressedKeys } from "./Loop.js";
 import pos from "./Position.js";
+let idCount = 0;
+const getUniqueId = (prefix = "") => {
+    idCount++;
+    return `${prefix}-${idCount}`;
+};
 const c = document.createElement("canvas");
 const context = c.getContext("2d");
 const g = {
@@ -15,10 +19,13 @@ const g = {
     setOrigin: (x, y) => (g.origin = pos.new(x, y)),
     setScale: (scale) => (g.scale = scale),
 };
+const initGraphic = () => {
+    body.addEventListener("mousemove", handleMouseMoveOnCanvas);
+    body.append(c);
+};
 const setViewDimension = (viewOrigin = pos.new(100, 15), viewEnd = pos.new(-100, -15), scale = -1) => {
     const width = window.innerWidth - viewOrigin.x + viewEnd.x;
     const height = window.innerHeight - viewOrigin.y + viewEnd.y;
-    body.append(c);
     g.setSize(width, height);
     const sizeC = () => {
         c.style.width = `${window.innerWidth}px`;
@@ -43,31 +50,59 @@ const setViewDimension = (viewOrigin = pos.new(100, 15), viewEnd = pos.new(-100,
 const w = {
     origin: pos.new(100, 100),
     components: {
-        0: [{ type: "rect", origin: pos.new(-100, -100), end: pos.new(900, 500) }],
+        0: [
+            {
+                id: "test",
+                type: "rect",
+                origin: pos.new(-100, -100),
+                end: pos.new(900, 500),
+                color: "red",
+            },
+        ],
     },
 };
+const registerComp = (id = "", type, origin = pos.new(0, 0), end = pos.new(200, 200), zIndex = 0) => {
+    if (!w.components[zIndex])
+        w.components[zIndex] = [];
+    w.components[zIndex].push({
+        id: id ? id : getUniqueId(type),
+        type,
+        origin,
+        end,
+        color: "blue",
+    });
+};
+const updateComp = (id, ...changes) => {
+    Object.values(w.components).forEach((layer) => layer.forEach((comp) => {
+        if (comp.id !== id)
+            return;
+        changes.forEach((change) => {
+            if (comp[change.property])
+                comp[change.property] = change.value;
+        });
+    }));
+};
+const shiftWorld = (shift) => {
+    w.origin = pos.add(w.origin, shift);
+};
 const draw = () => {
-    if ("w" in pressedKeys)
-        w.origin = pos.add(w.origin, pos.new(0, -1));
-    if ("s" in pressedKeys)
-        w.origin = pos.add(w.origin, pos.new(0, 1));
-    if ("a" in pressedKeys)
-        w.origin = pos.add(w.origin, pos.new(-1, 0));
-    if ("d" in pressedKeys)
-        w.origin = pos.add(w.origin, pos.new(1, 0));
     context.clearRect(0, 0, window.innerWidth, window.innerHeight);
-    context.fillStyle = "red";
-    let origin = pos.new(w.origin.x >= g.origin.x ? w.origin.x : g.origin.x, w.origin.y >= g.origin.y ? w.origin.y : g.origin.y);
-    let end = pos.add(g.origin, pos.new(g.scale * g.viewWidth, g.scale * g.viewHeight));
-    Object.values(w.components).forEach((comps) => comps.forEach((comp) => {
+    context.fillStyle = "black";
+    let origin = g.origin;
+    let end = CoordConversion.ViewToScreen(pos.new(g.viewWidth, g.viewHeight));
+    Object.entries(w.components)
+        .sort((a, b) => Number(a[0]) - Number(b[0]))
+        .forEach(([_, comps]) => comps.forEach((comp) => {
         switch (comp.type) {
             case "rect":
-                let o = pos.add(comp.origin, origin);
-                if (o.x <= g.origin.x)
-                    o.x = g.origin.x;
-                if (o.y <= g.origin.y)
-                    o.y = g.origin.y;
-                let e = pos.add(o, pos.add(comp.end, pos.negate(comp.origin)));
+                if (comp.color)
+                    context.fillStyle = comp.color;
+                let o = CoordConversion.WorldToScreen(comp.origin);
+                if (o.x <= origin.x)
+                    o.x = origin.x;
+                if (o.y <= origin.y)
+                    o.y = origin.y;
+                let e = CoordConversion.WorldToScreen(comp.end);
                 if (e.x > end.x)
                     e.x = end.x;
                 if (e.y > end.y)
@@ -77,6 +112,35 @@ const draw = () => {
         }
     }));
 };
+const isInRect = (p, rectOrigin, rectEnd) => {
+    return (p.x <= rectEnd.x &&
+        p.x >= rectOrigin.x &&
+        p.y <= rectEnd.y &&
+        p.y >= rectOrigin.y);
+};
+const getWorldComponent = (pWorld) => {
+    let target = null;
+    const layers = Object.entries(w.components).sort((a, b) => Number(a[0]) - Number(b[0]));
+    for (let i = 0; i < layers.length; i++) {
+        const comps = layers[i][1];
+        comps.forEach((comp) => {
+            if (isInRect(pWorld, comp.origin, comp.end))
+                target = comp;
+        });
+        if (target)
+            break;
+    }
+    return target;
+};
+let hoveredWorldObject = null;
+const handleMouseMoveOnCanvas = (event) => {
+    const p = pos.new(event.clientX, event.clientY);
+    if (!isInRect(p, g.origin, CoordConversion.ViewToScreen(pos.new(g.viewWidth, g.viewHeight)))) {
+        hoveredWorldObject = null;
+    }
+    else
+        hoveredWorldObject = getWorldComponent(CoordConversion.ScreenToWorld(p));
+};
 const CoordConversion = {
     ScreenToWorld: (pScreen) => pos.add(pos.add(CoordConversion.ScreenToView(pScreen), pos.negate(w.origin)), g.origin),
     ScreenToView: (pScreen) => pos.scale(1 / g.scale, pos.add(pScreen, pos.negate(g.origin))),
@@ -85,4 +149,4 @@ const CoordConversion = {
     WorldToScreen: (pWorld) => pos.add(pWorld, w.origin),
     WorldToView: (pWorld) => CoordConversion.ScreenToView(CoordConversion.WorldToScreen(pWorld)),
 };
-export { setViewDimension, draw, CoordConversion, w };
+export { setViewDimension, draw, CoordConversion, registerComp, updateComp, shiftWorld, hoveredWorldObject, initGraphic, };
