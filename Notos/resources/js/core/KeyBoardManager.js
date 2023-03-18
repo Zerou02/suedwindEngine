@@ -1,13 +1,10 @@
 import { gLoopManager } from "./globals.js";
 export class KeyboardManager {
+    keys = {};
+    _keysArrayMapped = [];
+    pressedKeys;
+    debug = false;
     constructor() {
-        this.keys = {};
-        this._keysArrayMapped = [];
-        this.debug = false;
-        this.addFunction = (key, functi, singleExecution = false) => {
-            this.keys[key] = { pressed: false, fn: functi, singleExecution };
-            this._keysArrayMapped = Object.values(this.keys);
-        };
         window.addEventListener("keydown", (e) => {
             if (this.debug) {
                 console.log("Key: ", e.key, "  n Event:", e, "time: ", new Date().getMilliseconds(), "keys:", this.keys);
@@ -29,4 +26,8 @@ export class KeyboardManager {
                 x.pressed = false;
         });
     }
+    addFunction = (key, functi, singleExecution = false) => {
+        this.keys[key] = { pressed: false, fn: functi, singleExecution };
+        this._keysArrayMapped = Object.values(this.keys);
+    };
 }

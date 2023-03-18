@@ -36,3 +36,4 @@ const initializeTest = () => {
 };
 initializeTest();
 let ti = new TileMapEditorScene(gAssetPath + "tiles/spritesheet.png");
+Neutralino.init();

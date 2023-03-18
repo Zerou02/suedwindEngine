@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "outDir": "Notos/resources/js",
+    "outDir": "./resources/js",
     "removeComments": true,
     "target": "ES2022",
     "moduleResolution": "node",

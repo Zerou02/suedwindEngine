@@ -4,8 +4,15 @@ import { LayerManager } from "./LayerManager.js";
 import { createDiv } from "./menuItems.js";
 import { SpriteManager } from "./SpriteManager.js";
 export class Scene {
+    collisionManager;
+    spriteManager;
+    layerManager;
+    drawManager;
+    rootElement;
+    layerRoot;
+    menuRoot;
+    menuItems = {};
     constructor() {
-        this.menuItems = {};
         this.collisionManager = new CollisionManager([]);
         this.spriteManager = new SpriteManager();
         this.rootElement = document.getElementById("body");

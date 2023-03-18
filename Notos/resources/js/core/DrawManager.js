@@ -1,5 +1,8 @@
 import { gLoopManager } from "./globals.js";
 export class DrawManager {
+    spriteManager;
+    layerManager;
+    _intervalID;
     constructor(scene) {
         this.spriteManager = scene.spriteManager;
         this.layerManager = scene.layerManager;

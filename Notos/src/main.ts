@@ -72,4 +72,4 @@ initializeTest();
 let ti = new TileMapEditorScene(gAssetPath + "tiles/spritesheet.png");
 
 //@ts-ignore
-//Neutralino.init();
+Neutralino.init();
