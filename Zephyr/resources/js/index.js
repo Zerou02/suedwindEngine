@@ -74,7 +74,7 @@ const clickOnWorldObject = () => {
                 });
             }
         }
-        else if (typeof value === "object") {
+        else if (typeof value === "object" && value.x && value.y) {
         }
         if (val)
             holder.append(name, val);
