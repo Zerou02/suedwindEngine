@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "outDir": "Zephyr/resources/js",
+    "outDir": "./resources/js/",
     "removeComments": true,
-    "target": "ES2022",
+    "target": "es2022",
     "moduleResolution": "node",
     "alwaysStrict": true,
     "allowUnreachableCode": false,

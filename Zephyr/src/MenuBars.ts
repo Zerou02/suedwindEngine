@@ -156,7 +156,6 @@ const minMaxOnDoubleClickNearBorder = () => {
     LastDimension[border] = Controller.MenuBarDimensions[border];
     Controller.MenuBarDimensions[border] = 10;
   } else Controller.MenuBarDimensions[border] = LastDimension[border];
-  sizeMenuBars();
 };
 
 let menuResizeTarget: HTMLDivElement | null = null;
@@ -226,7 +225,6 @@ const handleMouseMoveNearBorder = (event: MouseEvent) => {
     return;
   }
   resizeStart = pos.new(event.clientX, event.clientY);
-  sizeMenuBars();
 };
 
 let resizeStart: Position | null = null;
@@ -274,4 +272,5 @@ const initMenuBars = (
   return Controller;
 };
 
+export { sizeMenuBars };
 export default initMenuBars;
