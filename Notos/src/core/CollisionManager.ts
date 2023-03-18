@@ -23,11 +23,9 @@ export class CollisionManager {
   }
 
   testCollision = (colBox: CollisionBox) => {
-    console.log("TEST COL");
     let retBoxes: CollisionBox[] = [];
     this.colBoxes.forEach((x) => {
       if (colBox.id !== x.id) {
-        console.log("OTHER", x);
         if (this.isColliding(colBox, x)) {
           retBoxes.push(x);
         }

@@ -37,8 +37,6 @@ export class Sprite {
       layer: 0,
     };
 
-    console.log(this.transform);
-
     drawImage(this.ctx, src, position, size, (img) => {
       this.imgElement = img;
       if (size === null) {
@@ -73,7 +71,6 @@ export class Sprite {
   // TODO: Rotation zeichnen
   draw = () => {
     const d = this.transform.dimensions;
-    console.log(d.w, d.h);
 
     this.ctx.drawImage(this.imgElement, d.x, d.y, d.w, d.h);
   };
