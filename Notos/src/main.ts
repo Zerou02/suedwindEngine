@@ -6,6 +6,12 @@ import { Sprite } from "./core/Sprite.js";
 import { createButton, createCanvas } from "./core/menuItems.js";
 
 import { TileMapEditorScene } from "./core/TileMapEditor/TileMapEditorScene.js";
+import { Rectangle } from "./core/Rectangle.js";
+
+//@ts-ignore
+import config from "../../config.json" assert { type: "json" };
+
+import { loadWorld } from "../../EoS/EoS.js";
 
 const initializeTest = () => {
   const baseScene = new Scene();
@@ -46,6 +52,13 @@ const initializeTest = () => {
     baseScene
   );
 
+  let rect = new Rectangle(
+    { x: 0, y: 0, w: 100, h: 100 },
+    groundLayer,
+    baseScene,
+    "green"
+  );
+
   let player = new Entity(sprite);
   let enemy = new Entity(enemySprie);
 
@@ -73,3 +86,6 @@ let ti = new TileMapEditorScene(gAssetPath + "tiles/spritesheet.png");
 
 //@ts-ignore
 Neutralino.init();
+
+let test = loadWorld().then((x) => console.log(x));
+console.log(config);

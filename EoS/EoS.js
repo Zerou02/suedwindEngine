@@ -1,4 +1,4 @@
-const saveWorld = async (world, targetPath = "./EoS//worlds/last.json") => {
+const saveWorld = async (world, targetPath = "./EoS/worlds/last.json") => {
   await Neutralino.filesystem.writeFile(targetPath, JSON.stringify(world));
 };
 
