@@ -2,7 +2,6 @@ import { createElement } from "./DOM.js";
 import { hoveredWorldObject, initGraphic, registerComp, setViewDimension, updateComp, w, } from "./Graphics.js";
 import { Loop } from "./Loop.js";
 import initMenuBars from "./MenuBars.js";
-import colorValues from "../colorValues.json" assert { type: "json" };
 import pos from "./Position.js";
 window.Neutralino.init();
 const body = document.getElementsByTagName("body")[0];
@@ -56,7 +55,7 @@ const clickOnWorldObject = () => {
                 else if (value.startsWith("#"))
                     val.value = value;
                 else
-                    val.value = colorValues[value];
+                    val.value = "#FF00FF";
                 val.addEventListener("input", () => {
                     updateComp(id, {
                         property,

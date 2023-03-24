@@ -2,7 +2,6 @@ import { CollisionManager } from "./CollisionManager.js";
 import { DrawManager } from "./DrawManager.js";
 import { LayerManager } from "./LayerManager.js";
 import { createDiv } from "./menuItems.js";
-import { SpriteManager } from "./SpriteManager.js";
 import { DrawableObjectManager } from "./DrawableObjectManager.js";
 
 interface MenuItemMap {
@@ -11,7 +10,6 @@ interface MenuItemMap {
 
 export class Scene {
   collisionManager: CollisionManager;
-  spriteManager: SpriteManager;
   drawableObjectManager: DrawableObjectManager;
   layerManager: LayerManager;
   drawManager: DrawManager;
@@ -22,7 +20,6 @@ export class Scene {
 
   constructor() {
     this.collisionManager = new CollisionManager([]);
-    this.spriteManager = new SpriteManager();
     this.drawableObjectManager = new DrawableObjectManager();
 
     this.rootElement = document.getElementById("body") as HTMLBodyElement;

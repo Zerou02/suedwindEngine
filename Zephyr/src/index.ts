@@ -10,7 +10,6 @@ import {
 import { Loop } from "./Loop.js";
 import initMenuBars from "./MenuBars.js";
 //@ts-ignore
-import colorValues from "../colorValues.json" assert { type: "json" };
 import pos from "./Position.js";
 // //@ts-ignore
 // import { saveWorld, loadWorld } from "../../../EoS/Eos.js";
@@ -81,7 +80,7 @@ const clickOnWorldObject = () => {
                 "#"
               );
           else if (value.startsWith("#")) val.value = value;
-          else val.value = colorValues[value];
+          else val.value = "#FF00FF";
           val.addEventListener("input", () => {
             updateComp(id, {
               property,

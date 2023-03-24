@@ -15,16 +15,16 @@ export class EosParser {
     };
     parseItem = (item, scene, layer) => {
         if (item.type === "rect") {
-            return this.parseRectangle(item, scene, layer);
+            this.parseRectangle(item).addToScene(scene, layer);
         }
     };
-    parseRectangle = (item, scene, layer) => {
+    parseRectangle = (item) => {
         let { end, origin, type } = item;
         return new Rectangle({
             x: origin.x,
             y: origin.y,
             w: end.x - origin.x,
             h: end.y - origin.y,
-        }, layer, scene, "red");
+        }, "red");
     };
 }

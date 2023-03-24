@@ -36,27 +36,28 @@ const initializeTest = () => {
 
   let enemySprie = new Sprite(
     gAssetPath + "sprites/spaceship.png",
-    topLayer,
     { x: 0, y: 0 },
     { x: 400, y: 300 },
-    baseScene
+    baseScene,
+    topLayer
   );
+
   let sprite = new Sprite(
     gAssetPath + "icons/appIcon.png",
-    groundLayer,
     {
       x: 0,
       y: 400,
     },
     { x: 100, y: 100 },
-    baseScene
+    baseScene,
+    groundLayer
   );
 
   let rect = new Rectangle(
     { x: 0, y: 0, w: 100, h: 100 },
-    groundLayer,
+    "green",
     baseScene,
-    "green"
+    groundLayer
   );
 
   let player = new Entity(sprite);
@@ -82,21 +83,20 @@ const initializeTest = () => {
 };
 initializeTest();
 
-let ti = new TileMapEditorScene(gAssetPath + "tiles/spritesheet.png");
+const tileMap = () => {
+  let ti = new TileMapEditorScene(gAssetPath + "tiles/spritesheet.png");
+};
 
 //@ts-ignore
 Neutralino.init();
 //@ts-ignore
+
 let cfgPlain = (await Neutralino.filesystem.readFile(
   "./config.json"
 )) as string;
 let config = JSON.parse(cfgPlain);
 //@ts-ignore
-let b = (await loadWorld(cfgPlain.worldPath)) as EosMap;
-
-console.log(b);
+let worldMap = (await loadWorld(cfgPlain.worldPath)) as EosMap;
 
 let eosParser = new EosParser();
-let parsed = eosParser.parseEosMap(b);
-
-console.log("pa", parsed);
+//let parsed = eosParser.parseEosMap(worldMap);

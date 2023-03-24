@@ -1,12 +1,11 @@
 import { gLoopManager } from "./globals.js";
 import { Rectangle } from "./Rectangle.js";
+import { Sprite } from "./Sprite.js";
 export class DrawManager {
-    spriteManager;
     drawableObjectManager;
     layerManager;
     _intervalID;
     constructor(scene) {
-        this.spriteManager = scene.spriteManager;
         this.layerManager = scene.layerManager;
         this.drawableObjectManager = scene.drawableObjectManager;
         gLoopManager.addFn(() => this.redrawFn());
@@ -18,13 +17,11 @@ export class DrawManager {
                 ctx.clearRect(0, 0, x.canvas.width, x.canvas.height);
             }
         });
-        Object.values(this.spriteManager.sprites).forEach((x) => {
-            if (x.layer.shouldRedraw) {
-                x.draw();
-            }
-        });
         Object.values(this.drawableObjectManager.drawableObjects).forEach((x) => {
             if (x instanceof Rectangle) {
+                x.draw();
+            }
+            else if (x instanceof Sprite) {
                 x.draw();
             }
         });

@@ -2,11 +2,9 @@ import { CollisionManager } from "./CollisionManager.js";
 import { DrawManager } from "./DrawManager.js";
 import { LayerManager } from "./LayerManager.js";
 import { createDiv } from "./menuItems.js";
-import { SpriteManager } from "./SpriteManager.js";
 import { DrawableObjectManager } from "./DrawableObjectManager.js";
 export class Scene {
     collisionManager;
-    spriteManager;
     drawableObjectManager;
     layerManager;
     drawManager;
@@ -16,7 +14,6 @@ export class Scene {
     menuItems = {};
     constructor() {
         this.collisionManager = new CollisionManager([]);
-        this.spriteManager = new SpriteManager();
         this.drawableObjectManager = new DrawableObjectManager();
         this.rootElement = document.getElementById("body");
         this.layerRoot = createDiv({ x: 0, y: 0 }, "layerRoot");

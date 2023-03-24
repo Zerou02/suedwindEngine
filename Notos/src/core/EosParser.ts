@@ -25,14 +25,13 @@ export class EosParser {
     return scene;
   };
 
-  //@ts-ignore
-  parseItem = (item: EosItem, scene: Scene, layer: Layer): DrawableObject => {
+  parseItem = (item: EosItem, scene: Scene, layer: Layer) => {
     if (item.type === "rect") {
-      return this.parseRectangle(item, scene, layer);
+      this.parseRectangle(item).addToScene(scene, layer);
     }
   };
 
-  parseRectangle = (item: EosItem, scene: Scene, layer: Layer): Rectangle => {
+  parseRectangle = (item: EosItem): Rectangle => {
     let { end, origin, type } = item;
 
     return new Rectangle(
@@ -42,8 +41,6 @@ export class EosParser {
         w: end.x - origin.x,
         h: end.y - origin.y,
       },
-      layer,
-      scene,
       "red"
     );
   };

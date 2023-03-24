@@ -1,7 +1,8 @@
 import { Dimensions } from "./types.js";
 import { Layer } from "./LayerManager.js";
 import { Scene } from "./Scene.js";
-export class Rectangle {
+
+export class Circle {
   dimension: Dimensions;
   layer: Layer;
   scene: Scene;
@@ -9,20 +10,17 @@ export class Rectangle {
 
   constructor(
     dimensions: Dimensions,
-    colour: string,
-    scene: Scene | null = null,
-    layer: Layer | null = null
+    layer: Layer,
+    scene: Scene,
+    colour: string
   ) {
     this.dimension = dimensions;
-    this.colour = colour;
-    if (scene && layer) this.addToScene(scene, layer);
-  }
-
-  addToScene = (scene: Scene, layer: Layer) => {
     this.layer = layer;
     this.scene = scene;
+    this.colour = colour;
+
     scene.drawableObjectManager.addDrawable(this);
-  };
+  }
 
   draw = () => {
     let ctx = this.layer.canvas.getContext("2d") as CanvasRenderingContext2D;

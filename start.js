@@ -20,4 +20,5 @@ for(let a=1; a<args.length; a+=2){
 fs.writeFileSync("./config.json",JSON.stringify(config));
 
 exec(`tsc --p ./${wind}/tsconfig.json && neu run -- --url=/${wind}/resources/`,(err,stdout,stderr) => {
+    console.log(stdout);
 });

@@ -28,8 +28,8 @@ export class CollisionManager {
         return retBoxes;
     };
     isColliding = (colBox1, colBox2) => {
-        let rect1 = colBox1.transform.dimensions;
-        let rect2 = colBox2.transform.dimensions;
+        let rect1 = colBox1.dimension;
+        let rect2 = colBox2.dimension;
         return (rect1.x < rect2.x + rect2.w &&
             rect1.x + rect1.w > rect2.x &&
             rect1.y < rect2.y + rect2.h &&

@@ -1,17 +1,17 @@
 import { Scene } from "./Scene.js";
-import { Transform } from "./types.js";
+import { Dimensions } from "./types.js";
 import { assignID } from "./utils.js";
 
 type ColFn = (otherColBox: CollisionBox) => void;
 export class CollisionBox {
-  transform: Transform;
+  dimension: Dimensions;
   scene: Scene;
   id: number;
   onCollision: ColFn;
 
-  constructor(shape: Transform, scene: Scene) {
+  constructor(shape: Dimensions, scene: Scene) {
     this.id = assignID();
-    this.transform = shape;
+    this.dimension = shape;
     this.scene = scene;
     scene.collisionManager.add(this);
   }

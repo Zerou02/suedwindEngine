@@ -1,11 +1,11 @@
 import { drawImage } from "./canvasUtils.js";
 import { Layer } from "./LayerManager.js";
 import { Scene } from "./Scene.js";
-import { Coordinate2d, Transform } from "./types.js";
+import { Coordinate2d, Dimensions } from "./types.js";
 import { assignID } from "./utils.js";
 
 export class Sprite {
-  transform: Transform;
+  dimension: Dimensions;
   src: string;
 
   id: number;
@@ -16,51 +16,55 @@ export class Sprite {
 
   constructor(
     src: string,
-    layer: Layer,
     position: Coordinate2d,
     size: Coordinate2d | null,
-    scene: Scene
+    scene: Scene | null = null,
+    layer: Layer | null = null
   ) {
+    this.id = assignID();
+
     this.src = src;
-    this.layer = layer;
     this.imgElement = new Image();
     this.imgElement.src = src;
-    this.ctx = layer.canvas.getContext("2d") as CanvasRenderingContext2D;
-    this.scene = scene;
-    this.transform = {
-      dimensions: {
-        x: position.x,
-        y: position.y,
-        h: size?.y || 0,
-        w: size?.x || 0,
-      },
-      layer: 0,
+    this.dimension = {
+      x: position.x,
+      y: position.y,
+      h: size?.y || 0,
+      w: size?.x || 0,
     };
 
-    drawImage(this.ctx, src, position, size, (img) => {
-      this.imgElement = img;
-      if (size === null) {
-        this.transform.dimensions.w = img.clientWidth;
-        this.transform.dimensions.h = img.clientHeight;
-      }
-      this.scene.spriteManager.addSprite(this);
-    });
-    this.id = assignID();
+    if (scene && layer) this.addToScene(scene, layer);
+    return this;
   }
 
+  addToScene = (scene: Scene, layer: Layer) => {
+    this.layer = layer;
+    this.scene = scene;
+    this.ctx = layer.canvas.getContext("2d") as CanvasRenderingContext2D;
+    let { x, y, w, h } = this.dimension;
+    drawImage(this.ctx, this.src, { x, y }, { x: w, y: h }, (img) => {
+      this.imgElement = img;
+      if (w === null || h === null) {
+        this.dimension.w = img.clientWidth;
+        this.dimension.h = img.clientHeight;
+      }
+      this.scene.drawableObjectManager.addDrawable(this);
+    });
+  };
+
   move = (vector: Coordinate2d) => {
-    this.transform.dimensions.x += vector.x;
-    this.transform.dimensions.y += vector.y;
+    this.dimension.x += vector.x;
+    this.dimension.y += vector.y;
   };
 
   setSize = (w: number, h: number) => {
-    this.transform.dimensions.h = w;
-    this.transform.dimensions.w = h;
+    this.dimension.h = w;
+    this.dimension.w = h;
   };
 
   increaseSize = (rect: Coordinate2d) => {
-    this.transform.dimensions.h += rect.y;
-    this.transform.dimensions.w += rect.x;
+    this.dimension.h += rect.y;
+    this.dimension.w += rect.x;
   };
 
   setLayer = (layer: Layer) => {
@@ -70,7 +74,7 @@ export class Sprite {
 
   // TODO: Rotation zeichnen
   draw = () => {
-    const d = this.transform.dimensions;
+    const d = this.dimension;
 
     this.ctx.drawImage(this.imgElement, d.x, d.y, d.w, d.h);
   };

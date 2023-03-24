@@ -8,6 +8,6 @@ export class TileMapEditorScene {
         this.scene = new Scene();
         this.scene.layerManager.addLayer("base", createCanvas(800, 600), 0, false);
         let baseLevel = this.scene.layerManager.layers["base"];
-        this.spriteSheet = new Sprite(spriteSheetSrc, baseLevel, { x: 0, y: 0 }, null, this.scene);
+        this.spriteSheet = new Sprite(spriteSheetSrc, { x: 0, y: 0 }, null, this.scene, baseLevel);
     }
 }

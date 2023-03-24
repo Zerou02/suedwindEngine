@@ -19,12 +19,12 @@ const initializeTest = () => {
     let topLayer = baseScene.layerManager.layers["top"];
     let groundLayer = baseScene.layerManager.layers["ground"];
     let veryTopLayer = baseScene.layerManager.layers["veryTop"];
-    let enemySprie = new Sprite(gAssetPath + "sprites/spaceship.png", topLayer, { x: 0, y: 0 }, { x: 400, y: 300 }, baseScene);
-    let sprite = new Sprite(gAssetPath + "icons/appIcon.png", groundLayer, {
+    let enemySprie = new Sprite(gAssetPath + "sprites/spaceship.png", { x: 0, y: 0 }, { x: 400, y: 300 }, baseScene, topLayer);
+    let sprite = new Sprite(gAssetPath + "icons/appIcon.png", {
         x: 0,
         y: 400,
-    }, { x: 100, y: 100 }, baseScene);
-    let rect = new Rectangle({ x: 0, y: 0, w: 100, h: 100 }, groundLayer, baseScene, "green");
+    }, { x: 100, y: 100 }, baseScene, groundLayer);
+    let rect = new Rectangle({ x: 0, y: 0, w: 100, h: 100 }, "green", baseScene, groundLayer);
     let player = new Entity(sprite);
     let enemy = new Entity(enemySprie);
     gKeyBoardManager.addFunction("w", (e) => player.move({ x: 0, y: -10 }));
@@ -39,12 +39,11 @@ const initializeTest = () => {
     console.log(baseScene.layerManager);
 };
 initializeTest();
-let ti = new TileMapEditorScene(gAssetPath + "tiles/spritesheet.png");
+const tileMap = () => {
+    let ti = new TileMapEditorScene(gAssetPath + "tiles/spritesheet.png");
+};
 Neutralino.init();
 let cfgPlain = (await Neutralino.filesystem.readFile("./config.json"));
 let config = JSON.parse(cfgPlain);
-let b = (await loadWorld(cfgPlain.worldPath));
-console.log(b);
+let worldMap = (await loadWorld(cfgPlain.worldPath));
 let eosParser = new EosParser();
-let parsed = eosParser.parseEosMap(b);
-console.log("pa", parsed);

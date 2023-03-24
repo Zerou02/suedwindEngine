@@ -1,12 +1,12 @@
 import { assignID } from "./utils.js";
 export class CollisionBox {
-    transform;
+    dimension;
     scene;
     id;
     onCollision;
     constructor(shape, scene) {
         this.id = assignID();
-        this.transform = shape;
+        this.dimension = shape;
         this.scene = scene;
         scene.collisionManager.add(this);
     }

@@ -3,16 +3,14 @@ import { gKeyBoardManager, gLoopManager } from "./globals.js";
 import { LayerManager } from "./LayerManager.js";
 import { Rectangle } from "./Rectangle.js";
 import { Scene } from "./Scene.js";
-import { SpriteManager } from "./SpriteManager.js";
+import { Sprite } from "./Sprite.js";
 
 export class DrawManager {
-  spriteManager: SpriteManager;
   drawableObjectManager: DrawableObjectManager;
   layerManager: LayerManager;
   _intervalID: number;
 
   constructor(scene: Scene) {
-    this.spriteManager = scene.spriteManager;
     this.layerManager = scene.layerManager;
     this.drawableObjectManager = scene.drawableObjectManager;
 
@@ -27,14 +25,16 @@ export class DrawManager {
       }
     });
 
-    Object.values(this.spriteManager.sprites).forEach((x) => {
+    /*     Object.values(this.spriteManager.sprites).forEach((x) => {
       if (x.layer.shouldRedraw) {
         x.draw();
       }
-    });
+    }); */
 
     Object.values(this.drawableObjectManager.drawableObjects).forEach((x) => {
       if (x instanceof Rectangle) {
+        x.draw();
+      } else if (x instanceof Sprite) {
         x.draw();
       }
     });
