@@ -1,6 +1,8 @@
 import { Sprite } from "./Sprite";
 import { Rectangle } from "./Rectangle";
 import { Circle } from "./Circle";
+import { Line } from "./Line";
+
 export interface Dimensions {
   x: number;
   y: number;
@@ -20,7 +22,7 @@ export interface Coordinate2d {
 
 export type BasicShape = Rectangle | Circle;
 
-export type DrawableObject = BasicShape | Sprite;
+export type DrawableObject = BasicShape | Sprite | Line;
 
 export interface EosItem {
   type: "rect";

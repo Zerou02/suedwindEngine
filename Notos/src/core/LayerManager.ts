@@ -1,10 +1,5 @@
-export interface Layer {
-  canvas: HTMLCanvasElement;
-  name: String;
-  // zIndex
-  level: number;
-  shouldRedraw: boolean;
-}
+import { Layer } from "./Layer.js";
+import { Dimensions } from "./types.js";
 
 interface LayerMap {
   [name: string]: Layer;
@@ -20,24 +15,21 @@ export class LayerManager {
   }
 
   addLayer = (
+    dimensions: Dimensions,
     name: string,
-    canvas: HTMLCanvasElement,
     level: number,
     shouldRedraw: boolean
   ) => {
-    let newLayer: Layer = {
-      name,
-      canvas,
-      level,
-      shouldRedraw,
-    };
-    canvas.style.zIndex = level.toString();
-    this.layers[name] = newLayer;
-    this.orderedLayers.push(newLayer);
-    this.orderedLayers = this.orderedLayers.sort((a, b) => a.level - b.level);
-    this.rootElement.append(newLayer.canvas);
+    let newLayer = new Layer(dimensions, name, level, shouldRedraw, this);
+    this.addLayerL(newLayer);
   };
 
+  addLayerL(layer: Layer) {
+    this.layers[layer.name.toString()] = layer;
+    this.orderedLayers.push(layer);
+    this.orderedLayers = this.orderedLayers.sort((a, b) => a.level - b.level);
+    this.rootElement.append(layer.canvas);
+  }
   setRedrawFlag = (layerName: string, flag: boolean) => {
     this.layers[layerName].shouldRedraw = flag;
   };

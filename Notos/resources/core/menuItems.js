@@ -1,6 +1,8 @@
-export const createCanvas = (width, height) => {
+export const createCanvas = (x, y, width, height) => {
     let canvas = document.createElement("canvas");
     canvas.style.position = "absolute";
+    canvas.style.left = x.toString() + "px";
+    canvas.style.top = y.toString() + "px";
     canvas.width = width;
     canvas.height = height;
     return canvas;

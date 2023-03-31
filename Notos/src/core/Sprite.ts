@@ -1,5 +1,5 @@
 import { drawImage } from "./canvasUtils.js";
-import { Layer } from "./LayerManager.js";
+import { Layer } from "./Layer.js";
 import { Scene } from "./Scene.js";
 import { Coordinate2d, Dimensions } from "./types.js";
 import { assignID } from "./utils.js";
@@ -72,10 +72,8 @@ export class Sprite {
     this.ctx = layer.canvas.getContext("2d") as CanvasRenderingContext2D;
   };
 
-  // TODO: Rotation zeichnen
   draw = () => {
     const d = this.dimension;
-
     this.ctx.drawImage(this.imgElement, d.x, d.y, d.w, d.h);
   };
 }

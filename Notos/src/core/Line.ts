@@ -1,19 +1,23 @@
-import { Dimensions } from "./types.js";
-import { Layer } from "./Layer.js";
+import { Coordinate2d, Dimensions } from "./types.js";
 import { Scene } from "./Scene.js";
-export class Rectangle {
-  dimension: Dimensions;
+import { Layer } from "./Layer.js";
+
+export class Line {
+  startPoint: Coordinate2d;
+  endPoint: Coordinate2d;
   layer: Layer;
   scene: Scene;
   colour: string;
 
   constructor(
-    dimensions: Dimensions,
+    startPoint: Coordinate2d,
+    endPoint: Coordinate2d,
     colour: string,
     scene: Scene | null = null,
     layer: Layer | null = null
   ) {
-    this.dimension = dimensions;
+    this.startPoint = startPoint;
+    this.endPoint = endPoint;
     this.colour = colour;
     if (scene && layer) this.addToScene(scene, layer);
   }
@@ -26,8 +30,9 @@ export class Rectangle {
 
   draw = () => {
     let ctx = this.layer.canvas.getContext("2d") as CanvasRenderingContext2D;
-    let { h, w, x, y } = this.dimension;
-    ctx.fillStyle = this.colour;
-    ctx.fillRect(x, y, w, h);
+    ctx.beginPath();
+    ctx.moveTo(this.startPoint.x, this.startPoint.y);
+    ctx.lineTo(this.endPoint.x, this.endPoint.y);
+    ctx.stroke();
   };
 }

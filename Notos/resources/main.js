@@ -2,20 +2,19 @@ import { gAssetPath, gKeyBoardManager } from "./core/globals.js";
 import { Entity } from "./core/Entity.js";
 import { Scene } from "./core/Scene.js";
 import { Sprite } from "./core/Sprite.js";
-import { createButton, createCanvas } from "./core/menuItems.js";
+import { createButton } from "./core/menuItems.js";
 import { TileMapEditorScene } from "./core/TileMapEditor/TileMapEditorScene.js";
 import { Rectangle } from "./core/Rectangle.js";
 import { EosParser } from "./core/EosParser.js";
 import { loadWorld } from "../../EoS/EoS.js";
+import { Circle } from "./core/Circle.js";
 const initializeTest = () => {
     const baseScene = new Scene();
-    let canvas = createCanvas(800, 600);
-    let top = createCanvas(400, 300);
     let testButton = createButton({ x: 0, y: 100, h: 100, w: 200 }, "Destroy world", (e) => baseScene.deconstruct(), "testButton");
     baseScene.addMenuItem(testButton);
-    baseScene.layerManager.addLayer("veryTop", createCanvas(800, 600), 2, false);
-    baseScene.layerManager.addLayer("top", top, 1, true);
-    baseScene.layerManager.addLayer("ground", canvas, 0, true);
+    baseScene.layerManager.addLayer({ x: 0, y: 0, h: 600, w: 800 }, "veryTop", 2, false);
+    baseScene.layerManager.addLayer({ x: 0, y: 0, h: 300, w: 400 }, "top", 1, true);
+    baseScene.layerManager.addLayer({ x: 0, y: 0, h: 600, w: 800 }, "ground", 0, true);
     let topLayer = baseScene.layerManager.layers["top"];
     let groundLayer = baseScene.layerManager.layers["ground"];
     let veryTopLayer = baseScene.layerManager.layers["veryTop"];
@@ -36,14 +35,21 @@ const initializeTest = () => {
     gKeyBoardManager.addFunction("f", (e) => sprite.setLayer(veryTopLayer), true);
     document.addEventListener("mousedown", (e) => console.log("mousPos", e.clientX, e.clientY));
     gKeyBoardManager.addFunction("l", (e) => baseScene.deconstruct());
-    console.log(baseScene.layerManager);
 };
-initializeTest();
-const tileMap = () => {
-    let ti = new TileMapEditorScene(gAssetPath + "tiles/spritesheet.png");
+const eosTest = async () => {
+    let cfgPlain = (await Neutralino.filesystem.readFile("./config.json"));
+    let config = JSON.parse(cfgPlain);
+    let worldMap = (await loadWorld(cfgPlain.worldPath));
+    let eosParser = new EosParser();
+    let parsed = eosParser.parseEosMap(worldMap);
+};
+const tileMapTest = () => {
+    let ti = new TileMapEditorScene(gAssetPath + "spritesheets/spritesheet.png");
+};
+const circleTest = () => {
+    let baseScene = new Scene();
+    baseScene.layerManager.addLayer({ x: 0, y: 0, w: 500, h: 500 }, "ground", 0, true);
+    let circle = new Circle({ x: 100, y: 100 }, 50, "red", baseScene, baseScene.layerManager.layers["ground"]);
 };
 Neutralino.init();
-let cfgPlain = (await Neutralino.filesystem.readFile("./config.json"));
-let config = JSON.parse(cfgPlain);
-let worldMap = (await loadWorld(cfgPlain.worldPath));
-let eosParser = new EosParser();
+tileMapTest();

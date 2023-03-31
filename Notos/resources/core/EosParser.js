@@ -1,4 +1,3 @@
-import { createCanvas } from "./menuItems.js";
 import { Rectangle } from "./Rectangle.js";
 import { Scene } from "./Scene.js";
 export class EosParser {
@@ -6,7 +5,7 @@ export class EosParser {
     parseEosMap = (map) => {
         let scene = new Scene();
         Object.entries(map).forEach(([key, val]) => {
-            scene.layerManager.addLayer(key, createCanvas(1000, 1000), Number(key), true);
+            scene.layerManager.addLayer({ x: 0, y: 0, w: 1000, h: 1000 }, key, Number(key), true);
             val.forEach((item) => {
                 this.parseItem(item, scene, scene.layerManager.orderedLayers[key]);
             });

@@ -1,4 +1,6 @@
+import { Circle } from "./Circle.js";
 import { gLoopManager } from "./globals.js";
+import { Line } from "./Line.js";
 import { Rectangle } from "./Rectangle.js";
 import { Sprite } from "./Sprite.js";
 export class DrawManager {
@@ -23,6 +25,15 @@ export class DrawManager {
             }
             else if (x instanceof Sprite) {
                 x.draw();
+            }
+            else if (x instanceof Circle) {
+                x.draw();
+            }
+            else if (x instanceof Line) {
+                x.draw();
+            }
+            else {
+                console.error("Should be unreachable: Drawmanager");
             }
         });
     }

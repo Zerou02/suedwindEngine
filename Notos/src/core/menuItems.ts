@@ -1,8 +1,15 @@
 import { Coordinate2d, Dimensions } from "./types";
 
-export const createCanvas = (width: number, height: number) => {
+export const createCanvas = (
+  x: number,
+  y: number,
+  width: number,
+  height: number
+) => {
   let canvas = document.createElement("canvas") as HTMLCanvasElement;
   canvas.style.position = "absolute";
+  canvas.style.left = x.toString() + "px";
+  canvas.style.top = y.toString() + "px";
   canvas.width = width;
   canvas.height = height;
   return canvas;
