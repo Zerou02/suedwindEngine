@@ -44,7 +44,7 @@ const eosTest = async () => {
     let parsed = eosParser.parseEosMap(worldMap);
 };
 const tileMapTest = () => {
-    let ti = new TileMapEditorScene(gAssetPath + "spritesheets/spritesheet.png");
+    let ti = new TileMapEditorScene(gAssetPath + "spritesheets/customSheet.png");
 };
 const circleTest = () => {
     let baseScene = new Scene();

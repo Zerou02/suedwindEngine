@@ -30,7 +30,6 @@ export class TileMapEditorScene {
             if (!this.spriteSheet.currentSelectedPicture) {
                 return;
             }
-            console.log(this.spriteSheet.currentSelectedPicture);
             mapLayer.canvas
                 .getContext("2d")
                 ?.drawImage(this.spriteSheet.sprite.imgElement, this.spriteSheet.currentSelectedPicture.x * totalTileSize +
@@ -39,5 +38,7 @@ export class TileMapEditorScene {
                 this.gridSize, Math.floor((e.y - mapLayer.dimensions.y) / this.gridSize) *
                 this.gridSize, this.gridSize, this.gridSize);
         });
+        spriteSheetLvl.addBorder();
+        mapLayer.addBorder();
     }
 }

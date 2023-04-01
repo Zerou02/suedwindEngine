@@ -1,4 +1,5 @@
 import { LayerManager } from "./LayerManager.js";
+import { Line } from "./Line.js";
 import { createCanvas } from "./menuItems.js";
 import { Dimensions } from "./types";
 
@@ -40,5 +41,9 @@ export class Layer {
   moveTo(x: number, y: number) {
     this.canvas.style.left = x.toString() + "px";
     this.canvas.style.top = y.toString() + "px";
+  }
+
+  addBorder() {
+    this.canvas.style.border = "1px solid black";
   }
 }

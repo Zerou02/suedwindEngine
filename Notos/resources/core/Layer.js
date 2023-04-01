@@ -24,4 +24,7 @@ export class Layer {
         this.canvas.style.left = x.toString() + "px";
         this.canvas.style.top = y.toString() + "px";
     }
+    addBorder() {
+        this.canvas.style.border = "1px solid black";
+    }
 }

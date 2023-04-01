@@ -75,7 +75,6 @@ export class TileMapEditorScene {
         return;
       }
 
-      console.log(this.spriteSheet.currentSelectedPicture);
       mapLayer.canvas
         .getContext("2d")
         ?.drawImage(
@@ -94,5 +93,8 @@ export class TileMapEditorScene {
           this.gridSize
         );
     });
+
+    spriteSheetLvl.addBorder();
+    mapLayer.addBorder();
   }
 }

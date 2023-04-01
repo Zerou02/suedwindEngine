@@ -107,7 +107,7 @@ const eosTest = async () => {
 };
 
 const tileMapTest = () => {
-  let ti = new TileMapEditorScene(gAssetPath + "spritesheets/spritesheet.png");
+  let ti = new TileMapEditorScene(gAssetPath + "spritesheets/customSheet.png");
 };
 
 const circleTest = () => {
