@@ -4,7 +4,7 @@ import { Scene } from "./core/Scene.js";
 import { Sprite } from "./core/Sprite.js";
 import { createButton, createCanvas } from "./core/menuItems.js";
 import { EosMap } from "./core/types";
-import { TileMapEditorScene } from "./core/TileMapEditor/TileMapEditorScene.js";
+import { TileMapEditor } from "./core/TileMapEditor/TileMapEditor.js";
 import { Rectangle } from "./core/Rectangle.js";
 import { EosParser } from "./core/EosParser.js";
 //@ts-ignore
@@ -12,36 +12,18 @@ import { EosParser } from "./core/EosParser.js";
 
 import { loadWorld } from "../../EoS/EoS.js";
 import { Circle } from "./core/Circle.js";
+import { SpriteSheet } from "./core/TileMapEditor/Spritesheet.js";
+import { SpriteSheetSelection } from "./core/TileMapEditor/SpriteSheetSelection.js";
 
 const initializeTest = () => {
   const baseScene = new Scene();
 
-  let testButton = createButton(
-    { x: 0, y: 100, h: 100, w: 200 },
-    "Destroy world",
-    (e) => baseScene.deconstruct(),
-    "testButton"
-  );
+  let testButton = createButton({ x: 0, y: 100, h: 100, w: 200 }, "Destroy world", (e) => baseScene.deconstruct());
 
   baseScene.addMenuItem(testButton);
-  baseScene.layerManager.addLayer(
-    { x: 0, y: 0, h: 600, w: 800 },
-    "veryTop",
-    2,
-    false
-  );
-  baseScene.layerManager.addLayer(
-    { x: 0, y: 0, h: 300, w: 400 },
-    "top",
-    1,
-    true
-  );
-  baseScene.layerManager.addLayer(
-    { x: 0, y: 0, h: 600, w: 800 },
-    "ground",
-    0,
-    true
-  );
+  baseScene.layerManager.addLayer({ x: 0, y: 0, h: 600, w: 800 }, "veryTop", 2, false);
+  baseScene.layerManager.addLayer({ x: 0, y: 0, h: 300, w: 400 }, "top", 1, true);
+  baseScene.layerManager.addLayer({ x: 0, y: 0, h: 600, w: 800 }, "ground", 0, true);
 
   let topLayer = baseScene.layerManager.layers["top"];
   let groundLayer = baseScene.layerManager.layers["ground"];
@@ -66,12 +48,7 @@ const initializeTest = () => {
     groundLayer
   );
 
-  let rect = new Rectangle(
-    { x: 0, y: 0, w: 100, h: 100 },
-    "green",
-    baseScene,
-    groundLayer
-  );
+  let rect = new Rectangle({ x: 0, y: 0, w: 100, h: 100 }, "green", baseScene, groundLayer);
 
   let player = new Entity(sprite);
   let enemy = new Entity(enemySprie);
@@ -80,24 +57,16 @@ const initializeTest = () => {
   gKeyBoardManager.addFunction("a", (e) => player.move({ x: -10, y: 0 }));
   gKeyBoardManager.addFunction("s", (e) => player.move({ x: 0, y: 10 }));
   gKeyBoardManager.addFunction("d", (e) => player.move({ x: 10, y: 0 }));
-  gKeyBoardManager.addFunction("+", (e) =>
-    sprite.increaseSize({ x: 10, y: 10 })
-  );
-  gKeyBoardManager.addFunction("-", (e) =>
-    sprite.increaseSize({ x: -10, y: -10 })
-  );
+  gKeyBoardManager.addFunction("+", (e) => sprite.increaseSize({ x: 10, y: 10 }));
+  gKeyBoardManager.addFunction("-", (e) => sprite.increaseSize({ x: -10, y: -10 }));
   gKeyBoardManager.addFunction("f", (e) => sprite.setLayer(veryTopLayer), true);
-  document.addEventListener("mousedown", (e: MouseEvent) =>
-    console.log("mousPos", e.clientX, e.clientY)
-  );
+  document.addEventListener("mousedown", (e: MouseEvent) => console.log("mousPos", e.clientX, e.clientY));
   gKeyBoardManager.addFunction("l", (e) => baseScene.deconstruct());
 };
 
 const eosTest = async () => {
   //@ts-ignore
-  let cfgPlain = (await Neutralino.filesystem.readFile(
-    "./config.json"
-  )) as string;
+  let cfgPlain = (await Neutralino.filesystem.readFile("./config.json")) as string;
   let config = JSON.parse(cfgPlain);
   //@ts-ignore
   let worldMap = (await loadWorld(cfgPlain.worldPath)) as EosMap;
@@ -106,28 +75,17 @@ const eosTest = async () => {
   let parsed = eosParser.parseEosMap(worldMap);
 };
 
-const tileMapTest = () => {
-  let ti = new TileMapEditorScene(gAssetPath + "spritesheets/customSheet.png");
-};
-
 const circleTest = () => {
   let baseScene = new Scene();
-  baseScene.layerManager.addLayer(
-    { x: 0, y: 0, w: 500, h: 500 },
-    "ground",
-    0,
-    true
-  );
-  let circle = new Circle(
-    { x: 100, y: 100 },
-    50,
-    "red",
-    baseScene,
-    baseScene.layerManager.layers["ground"]
-  );
+  baseScene.layerManager.addLayer({ x: 0, y: 0, w: 500, h: 500 }, "ground", 0, true);
+  let circle = new Circle({ x: 100, y: 100 }, 50, "red", baseScene, baseScene.layerManager.layers["ground"]);
 };
 //@ts-ignore
 Neutralino.init();
 
-tileMapTest();
+//tileMapTest();
 //initializeTest();
+
+let spriteSheetSelection = new SpriteSheetSelection("dungeon_ground");
+await spriteSheetSelection.init();
+new TileMapEditor(spriteSheetSelection);

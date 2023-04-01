@@ -16,9 +16,9 @@ export class Scene {
         this.collisionManager = new CollisionManager([]);
         this.drawableObjectManager = new DrawableObjectManager();
         this.rootElement = document.getElementById("body");
-        this.layerRoot = createDiv({ x: 0, y: 0 }, "layerRoot");
+        this.layerRoot = createDiv({ x: 0, y: 0 });
         this.layerRoot.style.zIndex = "0";
-        this.menuRoot = createDiv({ x: 0, y: 0 }, "menuRoot");
+        this.menuRoot = createDiv({ x: 0, y: 0 });
         this.menuRoot.style.zIndex = "1";
         this.rootElement.append(this.layerRoot, this.menuRoot);
         this.layerManager = new LayerManager(this.layerRoot);

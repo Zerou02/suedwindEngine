@@ -11,6 +11,7 @@ export class Layer {
   level: number;
   shouldRedraw: boolean;
   layerManager: LayerManager;
+  redrawRequested: boolean;
 
   constructor(
     dimensions: Dimensions,
@@ -20,12 +21,7 @@ export class Layer {
     layerManager: LayerManager | null
   ) {
     this.dimensions = dimensions;
-    this.canvas = createCanvas(
-      dimensions.x,
-      dimensions.y,
-      dimensions.w,
-      dimensions.h
-    );
+    this.canvas = createCanvas(dimensions.x, dimensions.y, dimensions.w, dimensions.h);
     this.canvas.style.zIndex = level.toString();
     this.name = name;
     this.level = level;
@@ -44,6 +40,10 @@ export class Layer {
   }
 
   addBorder() {
-    this.canvas.style.border = "1px solid black";
+    this.canvas.style.outline = "1px solid black";
+  }
+
+  redraw() {
+    this.redrawRequested = true;
   }
 }

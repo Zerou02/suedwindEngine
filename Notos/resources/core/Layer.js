@@ -6,6 +6,7 @@ export class Layer {
     level;
     shouldRedraw;
     layerManager;
+    redrawRequested;
     constructor(dimensions, name, level, shouldRedraw, layerManager) {
         this.dimensions = dimensions;
         this.canvas = createCanvas(dimensions.x, dimensions.y, dimensions.w, dimensions.h);
@@ -25,6 +26,9 @@ export class Layer {
         this.canvas.style.top = y.toString() + "px";
     }
     addBorder() {
-        this.canvas.style.border = "1px solid black";
+        this.canvas.style.outline = "1px solid black";
+    }
+    redraw() {
+        this.redrawRequested = true;
     }
 }

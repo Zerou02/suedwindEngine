@@ -3,14 +3,15 @@ import { Entity } from "./core/Entity.js";
 import { Scene } from "./core/Scene.js";
 import { Sprite } from "./core/Sprite.js";
 import { createButton } from "./core/menuItems.js";
-import { TileMapEditorScene } from "./core/TileMapEditor/TileMapEditorScene.js";
+import { TileMapEditor } from "./core/TileMapEditor/TileMapEditor.js";
 import { Rectangle } from "./core/Rectangle.js";
 import { EosParser } from "./core/EosParser.js";
 import { loadWorld } from "../../EoS/EoS.js";
 import { Circle } from "./core/Circle.js";
+import { SpriteSheetSelection } from "./core/TileMapEditor/SpriteSheetSelection.js";
 const initializeTest = () => {
     const baseScene = new Scene();
-    let testButton = createButton({ x: 0, y: 100, h: 100, w: 200 }, "Destroy world", (e) => baseScene.deconstruct(), "testButton");
+    let testButton = createButton({ x: 0, y: 100, h: 100, w: 200 }, "Destroy world", (e) => baseScene.deconstruct());
     baseScene.addMenuItem(testButton);
     baseScene.layerManager.addLayer({ x: 0, y: 0, h: 600, w: 800 }, "veryTop", 2, false);
     baseScene.layerManager.addLayer({ x: 0, y: 0, h: 300, w: 400 }, "top", 1, true);
@@ -43,13 +44,12 @@ const eosTest = async () => {
     let eosParser = new EosParser();
     let parsed = eosParser.parseEosMap(worldMap);
 };
-const tileMapTest = () => {
-    let ti = new TileMapEditorScene(gAssetPath + "spritesheets/customSheet.png");
-};
 const circleTest = () => {
     let baseScene = new Scene();
     baseScene.layerManager.addLayer({ x: 0, y: 0, w: 500, h: 500 }, "ground", 0, true);
     let circle = new Circle({ x: 100, y: 100 }, 50, "red", baseScene, baseScene.layerManager.layers["ground"]);
 };
 Neutralino.init();
-tileMapTest();
+let spriteSheetSelection = new SpriteSheetSelection("dungeon_ground");
+await spriteSheetSelection.init();
+new TileMapEditor(spriteSheetSelection);

@@ -1,10 +1,12 @@
-export class Line {
+import { Drawable } from "./Drawable.js";
+export class Line extends Drawable {
     startPoint;
     endPoint;
     layer;
     scene;
     colour;
     constructor(startPoint, endPoint, colour, scene = null, layer = null) {
+        super(null);
         this.startPoint = startPoint;
         this.endPoint = endPoint;
         this.colour = colour;

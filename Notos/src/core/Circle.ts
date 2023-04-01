@@ -1,9 +1,9 @@
 import { Coordinate2d, Dimensions } from "./types.js";
 import { Layer } from "./Layer.js";
 import { Scene } from "./Scene.js";
+import { Drawable } from "./Drawable.js";
 
-export class Circle {
-  dimension: Dimensions;
+export class Circle extends Drawable {
   centre: Coordinate2d;
   radius: number;
   layer: Layer;
@@ -17,15 +17,16 @@ export class Circle {
     scene: Scene | null = null,
     layer: Layer | null = null
   ) {
+    super(null);
     this.centre = centre;
     this.radius = radius;
-    this.calcDimensionsFromRadius();
     this.colour = colour;
+    super.dimensions = this.calcDimensionsFromRadius();
     if (scene && layer) this.addToScene(scene, layer);
   }
 
   calcDimensionsFromRadius() {
-    this.dimension = {
+    return {
       x: this.centre.x - this.radius,
       y: this.centre.y - this.radius,
       w: 2 * this.radius,
@@ -41,7 +42,7 @@ export class Circle {
 
   draw = () => {
     let ctx = this.layer.canvas.getContext("2d") as CanvasRenderingContext2D;
-    let { h, w, x, y } = this.dimension;
+    let { h, w, x, y } = this.dimensions;
     ctx.fillStyle = this.colour;
     ctx.beginPath();
     ctx.arc(this.centre.x, this.centre.y, this.radius, 0, 2 * Math.PI);

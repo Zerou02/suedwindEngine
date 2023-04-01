@@ -10,7 +10,7 @@ export class Entity {
 
   constructor(sprite: Sprite) {
     this.sprite = sprite;
-    this.colBox = new CollisionBox(sprite.dimension, sprite.scene);
+    this.colBox = new CollisionBox(sprite.dimensions, sprite.scene);
     this.scene = sprite.scene;
 
     this.colBox.setColFn((x) => {

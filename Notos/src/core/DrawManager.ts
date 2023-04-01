@@ -25,25 +25,15 @@ export class DrawManager {
       if (x.shouldRedraw) {
         ctx.clearRect(0, 0, x.canvas.width, x.canvas.height);
       }
+      if (x.redrawRequested) {
+        x.redrawRequested = false;
+        ctx.clearRect(0, 0, x.canvas.width, x.canvas.height);
+      }
     });
 
-    /*     Object.values(this.spriteManager.sprites).forEach((x) => {
-      if (x.layer.shouldRedraw) {
-        x.draw();
-      }
-    }); */
-
     Object.values(this.drawableObjectManager.drawableObjects).forEach((x) => {
-      if (x instanceof Rectangle) {
+      if (x.visible) {
         x.draw();
-      } else if (x instanceof Sprite) {
-        x.draw();
-      } else if (x instanceof Circle) {
-        x.draw();
-      } else if (x instanceof Line) {
-        x.draw();
-      } else {
-        console.error("Should be unreachable: Drawmanager");
       }
     });
   }

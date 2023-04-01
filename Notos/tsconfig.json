@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "module": "ES2022",
     "outDir": "./resources/",
     "removeComments": true,
     "target": "ES2022",

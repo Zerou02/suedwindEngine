@@ -1,8 +1,9 @@
 import { Coordinate2d, Dimensions } from "./types.js";
 import { Scene } from "./Scene.js";
 import { Layer } from "./Layer.js";
+import { Drawable } from "./Drawable.js";
 
-export class Line {
+export class Line extends Drawable {
   startPoint: Coordinate2d;
   endPoint: Coordinate2d;
   layer: Layer;
@@ -16,6 +17,7 @@ export class Line {
     scene: Scene | null = null,
     layer: Layer | null = null
   ) {
+    super(null);
     this.startPoint = startPoint;
     this.endPoint = endPoint;
     this.colour = colour;
